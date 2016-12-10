@@ -8,20 +8,30 @@
 
 /* Begin PBXBuildFile section */
 		516A7A361DFB21DF0010BF95 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A351DFB21DF0010BF95 /* AppDelegate.swift */; };
-		516A7A381DFB21DF0010BF95 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A371DFB21DF0010BF95 /* ViewController.swift */; };
-		516A7A3B1DFB21DF0010BF95 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 516A7A391DFB21DF0010BF95 /* Main.storyboard */; };
-		516A7A3D1DFB21DF0010BF95 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 516A7A3C1DFB21DF0010BF95 /* Assets.xcassets */; };
 		516A7A401DFB21DF0010BF95 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 516A7A3E1DFB21DF0010BF95 /* LaunchScreen.storyboard */; };
+		516A7A481DFC4F730010BF95 /* BackspaceTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A471DFC4F730010BF95 /* BackspaceTextView.swift */; };
+		516A7A4C1DFC4F840010BF95 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A491DFC4F840010BF95 /* TagView.swift */; };
+		516A7A4D1DFC4F840010BF95 /* TagView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 516A7A4A1DFC4F840010BF95 /* TagView.xib */; };
+		516A7A4E1DFC4F840010BF95 /* TagListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A4B1DFC4F840010BF95 /* TagListView.swift */; };
+		516A7A511DFC4FA00010BF95 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 516A7A4F1DFC4FA00010BF95 /* Main.storyboard */; };
+		516A7A521DFC4FA00010BF95 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 516A7A501DFC4FA00010BF95 /* Images.xcassets */; };
+		516A7A571DFC50D80010BF95 /* TagTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A561DFC50D80010BF95 /* TagTableViewController.swift */; };
+		516A7A591DFC50F30010BF95 /* TagsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A581DFC50F30010BF95 /* TagsTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		516A7A321DFB21DF0010BF95 /* ManagedTagListView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ManagedTagListView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		516A7A351DFB21DF0010BF95 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		516A7A371DFB21DF0010BF95 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		516A7A3A1DFB21DF0010BF95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		516A7A3C1DFB21DF0010BF95 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		516A7A3F1DFB21DF0010BF95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		516A7A411DFB21DF0010BF95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		516A7A471DFC4F730010BF95 /* BackspaceTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackspaceTextView.swift; sourceTree = "<group>"; };
+		516A7A491DFC4F840010BF95 /* TagView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
+		516A7A4A1DFC4F840010BF95 /* TagView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagView.xib; sourceTree = "<group>"; };
+		516A7A4B1DFC4F840010BF95 /* TagListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagListView.swift; sourceTree = "<group>"; };
+		516A7A4F1DFC4FA00010BF95 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		516A7A501DFC4FA00010BF95 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		516A7A561DFC50D80010BF95 /* TagTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagTableViewController.swift; sourceTree = "<group>"; };
+		516A7A581DFC50F30010BF95 /* TagsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,14 +64,35 @@
 		516A7A341DFB21DF0010BF95 /* ManagedTagListView */ = {
 			isa = PBXGroup;
 			children = (
-				516A7A351DFB21DF0010BF95 /* AppDelegate.swift */,
-				516A7A371DFB21DF0010BF95 /* ViewController.swift */,
-				516A7A391DFB21DF0010BF95 /* Main.storyboard */,
-				516A7A3C1DFB21DF0010BF95 /* Assets.xcassets */,
-				516A7A3E1DFB21DF0010BF95 /* LaunchScreen.storyboard */,
-				516A7A411DFB21DF0010BF95 /* Info.plist */,
+				516A7A581DFC50F30010BF95 /* TagsTableViewCell.swift */,
+				516A7A561DFC50D80010BF95 /* TagTableViewController.swift */,
+				516A7A531DFC4FD00010BF95 /* TagListView */,
+				516A7A4F1DFC4FA00010BF95 /* Main.storyboard */,
+				516A7A5A1DFC511D0010BF95 /* Support */,
 			);
 			path = ManagedTagListView;
+			sourceTree = "<group>";
+		};
+		516A7A531DFC4FD00010BF95 /* TagListView */ = {
+			isa = PBXGroup;
+			children = (
+				516A7A471DFC4F730010BF95 /* BackspaceTextView.swift */,
+				516A7A491DFC4F840010BF95 /* TagView.swift */,
+				516A7A4B1DFC4F840010BF95 /* TagListView.swift */,
+				516A7A4A1DFC4F840010BF95 /* TagView.xib */,
+			);
+			name = TagListView;
+			sourceTree = "<group>";
+		};
+		516A7A5A1DFC511D0010BF95 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				516A7A3E1DFB21DF0010BF95 /* LaunchScreen.storyboard */,
+				516A7A351DFB21DF0010BF95 /* AppDelegate.swift */,
+				516A7A501DFC4FA00010BF95 /* Images.xcassets */,
+				516A7A411DFB21DF0010BF95 /* Info.plist */,
+			);
+			name = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -125,8 +156,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				516A7A401DFB21DF0010BF95 /* LaunchScreen.storyboard in Resources */,
-				516A7A3D1DFB21DF0010BF95 /* Assets.xcassets in Resources */,
-				516A7A3B1DFB21DF0010BF95 /* Main.storyboard in Resources */,
+				516A7A511DFC4FA00010BF95 /* Main.storyboard in Resources */,
+				516A7A521DFC4FA00010BF95 /* Images.xcassets in Resources */,
+				516A7A4D1DFC4F840010BF95 /* TagView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,22 +169,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				516A7A381DFB21DF0010BF95 /* ViewController.swift in Sources */,
+				516A7A4E1DFC4F840010BF95 /* TagListView.swift in Sources */,
+				516A7A481DFC4F730010BF95 /* BackspaceTextView.swift in Sources */,
+				516A7A591DFC50F30010BF95 /* TagsTableViewCell.swift in Sources */,
+				516A7A571DFC50D80010BF95 /* TagTableViewController.swift in Sources */,
 				516A7A361DFB21DF0010BF95 /* AppDelegate.swift in Sources */,
+				516A7A4C1DFC4F840010BF95 /* TagView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		516A7A391DFB21DF0010BF95 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				516A7A3A1DFB21DF0010BF95 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		516A7A3E1DFB21DF0010BF95 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -302,6 +330,7 @@
 				516A7A461DFB21DF0010BF95 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
