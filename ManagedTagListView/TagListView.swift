@@ -90,7 +90,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         /// Default margin outside a tag row
         static let defaultHorizontalMargin: CGFloat = 2.0
         /// Default offset for shadow
-        static let defaultShadowOffset: CGSize = CGSize.zero
+        static let defaultShadowOffset: CGSize = CGSize.init(width: -20.0, height: 0.0)
         /// Default opacity for shadow
         static let defaultshadowOpacity: Float = 0
         /// Default to label text
@@ -220,7 +220,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     @IBInspectable open dynamic var verticalPadding = Constants.defaultVerticalPadding {
         didSet {
             for tagView in tagViews {
-                tagView.paddingY = verticalPadding
+                tagView.verticalPadding = verticalPadding
             }
             rearrangeViews(true)
         }
@@ -228,7 +228,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     @IBInspectable open dynamic var horizontalPadding = Constants.defaultHorizontalPadding {
         didSet {
             for tagView in tagViews {
-                tagView.paddingX = horizontalPadding
+                tagView.horizontalPadding = horizontalPadding
             }
             rearrangeViews(true)
         }
@@ -254,21 +254,25 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
             rearrangeViews(true)
         }
     }
+    
     @IBInspectable open dynamic var shadowColor = Constants.defaultBackgroundColor {
         didSet {
             rearrangeViews(true)
         }
     }
+    
     @IBInspectable open dynamic var shadowRadius = Constants.defaultCornerRadius {
         didSet {
             rearrangeViews(true)
         }
     }
+    
     @IBInspectable open dynamic var shadowOffset = Constants.defaultShadowOffset {
         didSet {
             rearrangeViews(true)
         }
     }
+    
     @IBInspectable open dynamic var shadowOpacity = Constants.defaultshadowOpacity {
         didSet {
             rearrangeViews(true)
@@ -453,6 +457,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         return collapsedLabel
     }()
     
+    /*
     private lazy var tagBackgroundView: UIView = {
         let tagBackgroundView = UIView()
         tagBackgroundView.layer.shadowColor = self.shadowColor.cgColor
@@ -462,7 +467,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         tagBackgroundView.layer.shadowRadius = self.shadowRadius
         return tagBackgroundView
     }()
-    
+    */
     private lazy var tagView: TagView = {
         let tagView = TagView(title: "")
         tagView.delegate = self
@@ -475,8 +480,8 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         tagView.borderWidth = self.borderWidth
         tagView.borderColor = self.borderColor
         tagView.selectedBorderColor = self.selectedBorderColor
-        tagView.paddingX = self.horizontalPadding
-        tagView.paddingY = self.verticalPadding
+        tagView.horizontalPadding = self.horizontalPadding
+        tagView.verticalPadding = self.verticalPadding
         tagView.textFont = self.textFont
         // tagView.addTarget(self, action: #selector(tagPressed(_:)), for: .touchUpInside)
         // tagView.removeButton.addTarget(self, action: #selector(removeButtonPressed(_:)), for: .touchUpInside)
@@ -728,8 +733,8 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
             tagView.borderWidth = self.borderWidth
             tagView.borderColor = self.borderColor
             tagView.selectedBorderColor = self.selectedBorderColor
-            tagView.paddingX = self.horizontalPadding
-            tagView.paddingY = self.verticalPadding
+            tagView.horizontalPadding = self.horizontalPadding
+            tagView.verticalPadding = self.verticalPadding
             tagView.textFont = self.textFont
             tagView.tag = index
             if self.isEditable && allowsRemoval {
@@ -795,10 +800,14 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
                 )
             }
             // print("currentXY", currentX, currentY)
-            let tagBackgroundView = self.tagBackgroundView
-            tagBackgroundView.frame.origin = CGPoint(x: currentX, y: currentY)
-            tagBackgroundView.frame.size = tagView.bounds.size
-            addSubview(tagBackgroundView)
+            tagView.shadowColor = shadowColor
+            tagView.shadowOpacity = shadowOpacity
+            tagView.shadowRadius = shadowRadius
+            tagView.shadowOffset = shadowOffset
+            //let tagBackgroundView = self.tagBackgroundView
+            //tagBackgroundView.frame.origin = CGPoint(x: currentX, y: currentY)
+            //tagBackgroundView.frame.size = tagView.bounds.size
+            //addSubview(tagBackgroundView)
             addSubview(tagView)
             self.tagViews.append(tagView)
             // print("currentRowView", currentRowView.frame.origin)
@@ -1173,7 +1182,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     func indecesWithTag(_ title: String) -> [Int] {
         var indeces: [Int] = []
         for (index, tagView) in tagViews.enumerated() {
-            if tagView.tagViewLabel?.text == title {
+            if tagView.label?.text == title {
                 indeces.append(index)
             }
         }
@@ -1184,7 +1193,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     
     // Maybe this should be deprecated as it exposes to TagView
     private func tagPressed(_ sender: TagView!) {
-        sender.onTap?(sender)
+        // sender.onTap?(sender)
         if isEditable {
             if let currentIndex = self.tagViews.index(of: sender) {
                 removeTag(at: currentIndex)

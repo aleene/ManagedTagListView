@@ -1,31 +1,30 @@
 # ManagedTagListView
 
-Simple and highly customizable iOS tag list view, in Swift.
+A way to create a view with tags. Management of the tages is done through delegate- and datasource-functions. If you are familiar with UITableView, the you will have no problem with ManagedTagListView.
 
 Supports Storyboard, Auto Layout, and @IBDesignable.
 
 <img alt="Screenshot" src="Screenshots/Screenshot.png" width="310">
 
-## Usage
+## Setting up the interface
 
 The most convenient way is to use Storyboard. Drag a view to Storyboard and set Class to `TagListView` (if you use CocoaPods, also set Module to `TagListView`). Then you can play with the attributes in the right pane, and see the preview in real time thanks to [@IBDesignable](http://nshipster.com/ibinspectable-ibdesignable/).
 
 <img alt="Interface Builder" src="Screenshots/InterfaceBuilder.png" width="566">
+If you do not want to setup the interface elements in storyboard, you can also do it in code.
 
-## Unmanaged or managed approach
-The class can be used in unmanaged and managed mode. In unmanaged mode you add, setup and remove tags by yourself. In managed mode any interaction with the TagListView is handles through delegate- and datasource-functions. Be careful to mix the two modes. There might rest some problems.
-
-## Unmanaged functions
-You can add tag to the tag list view, or set custom font and alignment through code:
+## Setting up the data
+You need to support two datasource functions, otherwise ManagedTagListView will not work:
 ```swift
-tagListView.addTag("TagListView")
-tagListView.insertTag("This should be the second tag", at: 1)
-tagListView.addTags(["Add","two","tags"])
-tagListView.setTitle("New Title of tag", at: 3) // changes the taag at position 3
-tagListView.removeTag("meow") // all tags with title “meow” will be removed
-tagListView.removeAllTags()
+func numberOfTagsInTagListView(_ tagListView: TagListView) -> Int
+func tagListView(_ tagListView: TagListView, titleForTagAt index: Int) -> String
 ```
-### Selecting and deselecting tags
+All other delegate- and datasource-functions are optional.
+### Modes
+ManagedTagListView can work in two modes: select- (non-edit) and edit-mode. You can set the mode of a tagListWiew with isEditable.
+
+### Select-mode
+I
 ```swift
 tagListView.selectedTags() // will give you the tagView of all the tags.
 tagListView.deselectTag(at:4) // deselect tag at index 4
@@ -133,7 +132,10 @@ Be aware that if you update a property (e.g. `tagBackgroundColor`) for a `TagLis
 Drag the **TagListView** folder into your project.
 
 ## Acknowledgments
-
+This repository is inspired by several other repositores found on Github:
+- TagListView (https://github.com/ElaWorkshop/TagListView)
+- TokenField (https://github.com/rchatham/TokenField)
+These repositories have been merged into one, which makes attribution very difficult. However you can see a lot of TagListView, hence the name of this repository.
 
 ## License
 

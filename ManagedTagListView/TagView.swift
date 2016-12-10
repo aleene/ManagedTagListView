@@ -19,129 +19,189 @@ open class TagView: UIView {
     
     private struct Constants {
         static let RemoveButtonWidth: CGFloat = 24.0
+        /// Default maximum height = 150.0
+        static let defaultCornerRadius: CGFloat = 0.0
+        /// Default border width
+        static let defaultBorderWidth: CGFloat = 0.0
+        /// Default color and selected textColor
+        static let defaultTextColor: UIColor = UIColor.white
+        /// Default text font
+        static let defaultTextFont: UIFont = UIFont.systemFont(ofSize: 12)
+        /// Default color, highlighted and selected backgroundColor, shadowColor
+        static let defaultBackgroundColor = UIColor.blue
+        /// Default color and selected border Color
+        static let defaultBorderColor: UIColor = .blue
+        /// Default padding add to top and bottom of tag wrt font height
+        static let defaultVerticalPadding: CGFloat = 2.0
+        /// Default padding between view objects
+        static let defaultHorizontalPadding: CGFloat = 5.0
+        
+        /// Default offset for shadow
+        static let defaultShadowOffset = CGSize.init(width: -20.0, height: 0.0)
+        /// Default opacity for shadow
+        static let defaultShadowOpacity: Float = 1
+    }
+
+    @IBInspectable open var cornerRadius = Constants.defaultCornerRadius {
+        didSet {
+            shadow?.layer.cornerRadius = cornerRadius
+            shadow?.layer.masksToBounds = cornerRadius > 0
+        }
+    }
+    @IBInspectable open var borderWidth = Constants.defaultBorderWidth {
+        didSet {
+            shadow?.layer.borderWidth = borderWidth
+        }
     }
     
-    /// TagView delegate gives access to the didTagView(_ tagView: TagView) method.
-    public weak var delegate: TagViewDelegate?
-
-    private var tapGestureRecognizer: UITapGestureRecognizer!
-
-    /// TagView's title.
-    public var title = "" {
-        didSet {
-            tagViewLabel?.text = title
-            setupView()
-        }
-    }
-
-    @IBInspectable open var cornerRadius: CGFloat = 0 {
-        didSet {
-            background?.layer.cornerRadius = cornerRadius
-            background?.layer.masksToBounds = cornerRadius > 0
-        }
-    }
-    @IBInspectable open var borderWidth: CGFloat = 0 {
-        didSet {
-            background?.layer.borderWidth = borderWidth
-        }
-    }
-    
-    @IBInspectable open var borderColor: UIColor? {
+    @IBInspectable open var borderColor = Constants.defaultBorderColor {
         didSet {
             reloadStyles()
         }
     }
     
-    @IBInspectable open var textColor: UIColor = UIColor.white {
+    @IBInspectable open var textColor = Constants.defaultTextColor {
         didSet {
             reloadStyles()
         }
     }
-    @IBInspectable open var selectedTextColor: UIColor = UIColor.white {
+    @IBInspectable open var selectedTextColor = Constants.defaultTextColor {
         didSet {
             reloadStyles()
         }
     }
-    @IBInspectable open var paddingY: CGFloat = 2 {
+    @IBInspectable open var highlightedTextColor = Constants.defaultTextColor {
         didSet {
-            topLayoutConstraint?.constant = paddingY
-            bottomLayOutConstraint?.constant = paddingY
+            reloadStyles()
+        }
+    }
+
+    @IBInspectable open var verticalPadding = Constants.defaultVerticalPadding {
+        didSet {
+            topLayoutConstraint?.constant = verticalPadding
+            bottomLayOutConstraint?.constant = verticalPadding
             // titleEdgeInsets.top = paddingY
             // titleEdgeInsets.bottom = paddingY
         }
     }
-    @IBInspectable open var paddingX: CGFloat = 5 {
+    @IBInspectable open var horizontalPadding = Constants.defaultHorizontalPadding {
         didSet {
-            leadingLayOutConstraint?.constant = paddingX
+            leadingLayOutConstraint?.constant = horizontalPadding
             // titleEdgeInsets.left = paddingX
-            //updateRightInsets()
+            updateRightInsets()
         }
     }
-    
-    @IBInspectable open var tagBackgroundColor: UIColor = UIColor.gray {
+    // beware that this UIView also has an attribute backgroundColor
+    @IBInspectable open var tagBackgroundColor = Constants.defaultBackgroundColor {
         didSet {
             reloadStyles()
         }
     }
     
-    @IBInspectable open var highlightedBackgroundColor: UIColor? {
+    @IBInspectable open var highlightedBackgroundColor = Constants.defaultBackgroundColor {
         didSet {
             reloadStyles()
         }
     }
     
-    @IBInspectable open var selectedBorderColor: UIColor? {
+    @IBInspectable open var highlightedBorderColor = Constants.defaultBackgroundColor {
+        didSet {
+            reloadStyles()
+        }
+    }
+
+    
+    @IBInspectable open var selectedBorderColor = Constants.defaultBackgroundColor {
         didSet {
             reloadStyles()
         }
     }
     
-    @IBInspectable open var selectedBackgroundColor: UIColor? {
+    @IBInspectable open var selectedBackgroundColor = Constants.defaultBackgroundColor {
         didSet {
             reloadStyles()
         }
     }
     
-    var textFont: UIFont = UIFont.systemFont(ofSize: 12) {
+    var textFont: UIFont = Constants.defaultTextFont {
         didSet {
-            tagViewLabel?.font = textFont
+            label?.font = textFont
         }
     }
     
+    
+    @IBInspectable open dynamic var shadowColor = Constants.defaultBackgroundColor {
+        didSet {
+            reloadStyles()
+        }
+    }
+    
+    @IBInspectable open dynamic var shadowRadius = Constants.defaultCornerRadius {
+        didSet {
+            reloadStyles()
+        }
+    }
+    
+    @IBInspectable open dynamic var shadowOffset = Constants.defaultShadowOffset {
+        didSet {
+            reloadStyles()
+        }
+    }
+    
+    @IBInspectable open dynamic var shadowOpacity = Constants.defaultShadowOpacity {
+        didSet {
+            reloadStyles()
+        }
+    }
+
     private func reloadStyles() {
         if isHighlighted {
-            if let highlightedBackgroundColor = highlightedBackgroundColor {
-                // For highlighted, if it's nil, we should not fallback to backgroundColor.
-                // Instead, we keep the current color.
-                background?.backgroundColor = highlightedBackgroundColor
-            }
-        }
+            shadow.backgroundColor = highlightedBackgroundColor
+            label.textColor = highlightedTextColor
+            shadow.layer.borderColor = highlightedBorderColor.cgColor
+                    }
         else if isSelected {
-            background?.backgroundColor = selectedBackgroundColor ?? tagBackgroundColor
-            background?.layer.borderColor = selectedBorderColor?.cgColor ?? borderColor?.cgColor
-            tagViewLabel?.textColor = UIColor.blue
-            // setTitleColor(selectedTextColor, for: UIControlState())
+            shadow.backgroundColor = selectedBackgroundColor
+            label.textColor = selectedTextColor
+            shadow.layer.borderColor = selectedBorderColor.cgColor
         }
         else {
-            background?.backgroundColor = tagBackgroundColor
-            background?.layer.borderColor = borderColor?.cgColor
-            tagViewLabel?.textColor = UIColor.white
-            // setTitleColor(textColor, for: UIControlState())
+            shadow.backgroundColor = tagBackgroundColor
+            label.textColor = textColor
+            shadow.layer.borderColor = borderColor.cgColor
         }
     }
     
     open var isHighlighted: Bool = false {
         didSet {
-            reloadStyles()
+            if isHighlighted != oldValue {
+                reloadStyles()
+            }
         }
     }
     
     open var isSelected: Bool = false {
         didSet {
-            reloadStyles()
+            if isSelected != oldValue {
+                reloadStyles()
+            }
         }
     }
     
+    
+    /// TagView delegate gives access to the didTagView(_ tagView: TagView) method.
+    public weak var delegate: TagViewDelegate?
+    
+    private var tapGestureRecognizer: UITapGestureRecognizer!
+    
+    /// TagView's title.
+    public var title = "" {
+        didSet {
+            label?.text = title
+            setupView()
+        }
+    }
+
     /// function that responds to the Token's tapGestureRecognizer.
     func didTapTagView(_ sender: UITapGestureRecognizer) {
         delegate?.didTapTagView(self)
@@ -164,28 +224,8 @@ open class TagView: UIView {
         }
     }
     
-    /*
-     
-    @IBInspectable open var removeButtonIconSize: CGFloat = 12 {
-        didSet {
-            removeButton.iconSize = removeButtonIconSize
-            updateRightInsets()
-        }
-    }
-    @IBInspectable open var removeIconLineWidth: CGFloat = 3 {
-        didSet {
-            removeButton.lineWidth = removeIconLineWidth
-        }
-    }
-    @IBInspectable open var removeIconLineColor: UIColor = UIColor.white.withAlphaComponent(0.54) {
-        didSet {
-            removeButton.lineColor = removeIconLineColor
-        }
-    }
-    */
-    
     /// Handles Tap (TouchUpInside)
-    open var onTap: ((TagView) -> Void)?
+    // open var onTap: ((TagView) -> Void)?
     // open var onLongPress: ((TagView) -> Void)?
     
     // MARK: - init
@@ -215,9 +255,9 @@ open class TagView: UIView {
     
     override open var intrinsicContentSize: CGSize {
         /// Returns the intrinsicContentSize. The preferred size of the view.
-        var size = tagViewLabel?.intrinsicContentSize
-        size?.height = textFont.pointSize + paddingY * 2
-        size?.width += paddingX * 2
+        var size = label?.intrinsicContentSize
+        size?.height = textFont.pointSize + verticalPadding * 2
+        size?.width += horizontalPadding * 2
         if removeButtonIsEnabled {
             size?.width += Constants.RemoveButtonWidth // + paddingX
         }
@@ -227,30 +267,32 @@ open class TagView: UIView {
     
     private func updateRightInsets() {
         if removeButtonIsEnabled {
-            trailingLayOutConstraint?.constant = paddingX  + Constants.RemoveButtonWidth // + paddingX
+            trailingLayOutConstraint?.constant = horizontalPadding  + Constants.RemoveButtonWidth // + paddingX
             // titleEdgeInsets.right = paddingX  + removeButtonIconSize + paddingX
         }
         else {
             //titleEdgeInsets.right = paddingX
-            trailingLayOutConstraint?.constant = paddingX
+            trailingLayOutConstraint?.constant = horizontalPadding
         }
     }
     
-    @IBOutlet weak var tagViewLabel: UILabel! {
+    @IBOutlet weak var label: UILabel! {
         didSet {
-            tagViewLabel.text = title
-            tagViewLabel.textAlignment = .left
+            label.text = title
+            label.textAlignment = .left
+            label.textColor = textColor
+            label.font = textFont
         }
     }
     
     @IBOutlet weak var bottomLayOutConstraint: NSLayoutConstraint! {
         didSet {
-            bottomLayOutConstraint.constant = paddingY
+            bottomLayOutConstraint.constant = verticalPadding
         }
     }
     @IBOutlet weak var leadingLayOutConstraint: NSLayoutConstraint! {
         didSet {
-            leadingLayOutConstraint.constant = paddingX
+            leadingLayOutConstraint.constant = horizontalPadding
         }
     }
     @IBOutlet weak var trailingLayOutConstraint: NSLayoutConstraint! {
@@ -260,13 +302,19 @@ open class TagView: UIView {
     }
     @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint! {
         didSet {
-            topLayoutConstraint.constant = paddingY
+            topLayoutConstraint.constant = verticalPadding
         }
     }
     
-    @IBOutlet weak var background: UIView! {
+    @IBOutlet weak var shadow: UIView! {
         didSet {
-            
+            shadow.backgroundColor = tagBackgroundColor
+            shadow.layer.shadowColor = shadowColor.cgColor
+            shadow.layer.shadowRadius = shadowRadius
+            shadow.layer.shadowOffset = shadowOffset
+            shadow.layer.shadowOpacity = shadowOpacity
+            shadow.layer.masksToBounds = false
+            shadow.layer.shadowPath = UIBezierPath(roundedRect: shadow.bounds, cornerRadius: self.cornerRadius).cgPath
         }
     }
     @IBOutlet weak var removeButtonWidthConstraint: NSLayoutConstraint!

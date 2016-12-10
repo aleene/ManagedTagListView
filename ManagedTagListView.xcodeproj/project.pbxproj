@@ -17,7 +17,6 @@
 		516A7A521DFC4FA00010BF95 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 516A7A501DFC4FA00010BF95 /* Images.xcassets */; };
 		516A7A571DFC50D80010BF95 /* TagTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A561DFC50D80010BF95 /* TagTableViewController.swift */; };
 		516A7A591DFC50F30010BF95 /* TagsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A581DFC50F30010BF95 /* TagsTableViewCell.swift */; };
-		51CF42BF1DFC55D800C9AD91 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 51CF42BE1DFC55D800C9AD91 /* README.md */; };
 		51CF42C11DFC56CD00C9AD91 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CF42C01DFC56CC00C9AD91 /* ViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -178,7 +177,6 @@
 				516A7A4E1DFC4F840010BF95 /* TagListView.swift in Sources */,
 				516A7A481DFC4F730010BF95 /* BackspaceTextView.swift in Sources */,
 				516A7A591DFC50F30010BF95 /* TagsTableViewCell.swift in Sources */,
-				51CF42BF1DFC55D800C9AD91 /* README.md in Sources */,
 				516A7A571DFC50D80010BF95 /* TagTableViewController.swift in Sources */,
 				516A7A361DFB21DF0010BF95 /* AppDelegate.swift in Sources */,
 				51CF42C11DFC56CD00C9AD91 /* ViewController.swift in Sources */,

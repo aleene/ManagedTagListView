@@ -9,14 +9,14 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TagView" customModule="TagListViewDemo" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TagView" customModule="ManagedTagListView" customModuleProvider="target">
             <connections>
-                <outlet property="background" destination="65R-BH-Ljd" id="9AO-qU-Drj"/>
                 <outlet property="bottomLayOutConstraint" destination="Ny5-Q4-Dd4" id="mgQ-Ih-M7Z"/>
+                <outlet property="label" destination="0FF-5S-vXq" id="ZCm-Vu-n7o"/>
                 <outlet property="leadingLayOutConstraint" destination="V52-g6-ZAR" id="v03-8a-kgP"/>
                 <outlet property="removeButton" destination="NHO-JS-fit" id="WcT-5A-QP8"/>
                 <outlet property="removeButtonWidthConstraint" destination="fRY-Nz-Bag" id="Nqf-85-hjW"/>
-                <outlet property="tagViewLabel" destination="0FF-5S-vXq" id="7Of-uD-0gf"/>
+                <outlet property="shadow" destination="65R-BH-Ljd" id="aM7-0p-Vbb"/>
                 <outlet property="topLayoutConstraint" destination="w3J-8Q-KCK" id="dp0-Ps-iu5"/>
                 <outlet property="trailingLayOutConstraint" destination="BY3-rd-LPv" id="t3E-Ju-bh7"/>
             </connections>
