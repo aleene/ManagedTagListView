@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import TagListView
 
 class TagsTableViewCell: UITableViewCell {
     
@@ -25,7 +24,7 @@ class TagsTableViewCell: UITableViewCell {
 
     var editMode = false {
         didSet {
-            tagListView.isEditable = editMode
+            tagListView?.isEditable = editMode
         }
     }
     
@@ -33,7 +32,7 @@ class TagsTableViewCell: UITableViewCell {
         didSet {
             tagListView.textFont = UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)
             tagListView.alignment = .center
-            tagListView.tagBackgroundColor = UIColor.green
+            tagListView.tagBackgroundColor = .green
             tagListView.cornerRadius = 10
             tagListView.delegate = delegate
             tagListView.datasource = datasource
