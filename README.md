@@ -27,10 +27,9 @@ tagListView.alignment.shadowRadius = 2
 tagListView.alignment.shadowOpacity = 0.4
 tagListView.alignment.shadowColor = UIColor.black
 tagListView.alignment.shadowOffset = CGSize(width: 1, height: 1)
-tagListView.hasPrefixLabel = true
 tagListView.prefixLabelTextColor = UIColor.white
 tagListView.prefixLabelBackgroundColor = UICOlor.red
-tagListView.prefixLabelText = "This is prefix text"
+tagListView.prefixLabelText = "This is prefix text" // if not defined there will be no refix label
 ```
 ## Setting up Delegate/Datasource functions
 TagViewList support several delegate and datasource functions, which you can use. First setup your viewController as delegate:

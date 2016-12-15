@@ -900,7 +900,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
             height: inputHeight
         )
         currentX += inputTextView.frame.width
-        currentY += inputTextView.frame.height
+        currentY += inputTextView.frame.height  
         // print("inputHeight",inputHeight)
         /*
         var exclusionPaths: [UIBezierPath] = []
