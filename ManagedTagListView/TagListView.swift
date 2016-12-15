@@ -290,6 +290,12 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         }
     }
     
+    @IBInspectable open dynamic var clearButtonIsEnabled: Bool = true {
+        didSet {
+            rearrangeViews(true)
+        }
+    }
+    
     @IBInspectable open dynamic var clearRemoveImage: UIImage? = Constants.clearRemoveImage
     
     // MARK: - Public? variables
@@ -685,7 +691,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
             adjustHeightFor(currentY: currentY)
         }
         
-        if isEditable && allowsRemoval {
+        if isEditable && allowsRemoval && clearButtonIsEnabled {
             layoutClearView()
         }
         

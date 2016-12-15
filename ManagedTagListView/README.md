@@ -4,13 +4,10 @@ A way to create a view with tags. Management of the tags is done through delegat
 
 Supports Storyboard, Autolayout, and @IBDesignable.
 
-<img alt="Screenshot" src="Screenshots/Screenshot.png" width="310">
-
 ## Setting up the interface
 
 The most convenient way is to use Storyboard. Drag a view to Storyboard and set Class to `TagListView` (if you use CocoaPods, also set Module to `TagListView`). Then you can play with the attributes in the right pane, and see the preview in real time thanks to [@IBDesignable](http://nshipster.com/ibinspectable-ibdesignable/).
 
-<img alt="Interface Builder" src="Screenshots/InterfaceBuilder.png" width="566">
 If you do not want to setup the interface elements in storyboard, you can also do it in code with:
 ```swift
 tagListView.textColor = UIColor.white
@@ -82,15 +79,20 @@ func tagListView(_ tagListView: TagListView, didDeselectTagAt index: Int) -> Voi
 ```
 
 ### Edit-mode
-If a TagListView is set in edit-mode with `isEditable = true`, the user can remove, add and reorder tags. It is possible to finetune what is allowed with: `allowsRemoval = false/true`, `allowsCreation = false/true` and `allowsReordering = false/true`. Default is all true.
+If a TagListView is set in edit-mode with `isEditable = true`, the user can remove, add and reorder tags. 
+It is possible to finetune what is allowed with: 
+- `allowsRemoval = true` (default), which allows/disallows removal of tags;
+- `clearButtonIsEnabled = true` (default), which adds a clear all Tags button;
+- `removeButtonIsEnabled = true` (default), which adds a remove tag accessory next to the tag's text. If the keyboard is enabled, tags can also be deleted by backspacing;
+- `allowsCreation = true` (default), which allows the user to add tags, by tapping on the tagViewList;
+- `allowsReordering = true` (default), which allows the user to reorder tags by drag&drop; 
+
 If it is allowed to remove a tag, its appearance can be adjusted with:
 ```swift
 tagListView.highlightedTextColor = .red // defines the colour of the text of highlighted tags
 tagListView.tagHighlightedBackgroundColor = .green // defines the background colours of highlighted tags
 tagListView.highlightedBorderColor = .black // defines the border colour of highlighted tags
 ```
-In addition it is possible to add a delete button next to a tag with: `removalButtonIsEnabled = true`. Default is enabled.
-
 You can intercept the edit-instructions with the appropriate delegate functions.
 ```swift
 func tagListView(_ tagListView: TagListView, canEditTagAt index: Int) -> Bool
