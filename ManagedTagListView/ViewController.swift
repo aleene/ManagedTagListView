@@ -61,23 +61,7 @@ class ViewController: UIViewController, TagListViewDelegate, TagListViewDataSour
         tagListView.delegate = self
         tagListView.datasource = self
         tagListView.isEditable = true
-
-        //tagListView.addTag("TagListViewTEST")
-        //tagListView.addTag("TEAChart")
-        //tagListView.addTag("To Be Removed")
-        //tagListView.addTag("To Be Removed")
-        //tagListView.addTag("Quark Shell")
-        //tagListView.removeTag("To Be Removed")
-        //tagListView.addTag("On tap will be removed").onTap = { [weak self] tagView in
-        //    self?.tagListView.remove(tagView)
-        //}
-        //let tagView = tagListView.addTag("gray")
-        //tagView.tagBackgroundColor = UIColor.gray
-        //tagView.onTap = { tagView in
-        //    print("Don’t tap me!")
-        // }
-        
-        //tagListView.insertTag("This should be the third tag", at: 2)
+        tagListView.textColor = .red
         
         // setup biggerTagListView
         
@@ -92,9 +76,6 @@ class ViewController: UIViewController, TagListViewDelegate, TagListViewDataSour
         biggerTagListView.prefixLabelText = "BTLV "
         biggerTagListView.hasPrefixLabel = true
         biggerTagListView.isEditable = true
-        //biggerTagListView.allowsCreation = true
-        //biggerTagListView.allowsReordering = false
-        //biggerTagListView.allowsRemoval = true
         
         // This is an example of a TagListView, wich allows reordering
         // The data is found in biggestTagListViewTags

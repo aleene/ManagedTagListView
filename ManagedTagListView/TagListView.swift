@@ -517,18 +517,25 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         static let ViewSize: CGFloat = 22.0
     }
     
-    private var clearView: UIView = {
+    private lazy var clearView: UIView = {
         
-        let clearImageView = UIImageView.init(image: UIImage.init(named: "Clear"))
-        clearImageView.frame.size = CGSize.init(width: Clear.ImageSize, height: Clear.ImageSize)
-        clearImageView.contentMode = .scaleAspectFit
+        var image = UIImage(named: "Clear")!
+        // this is needed to adapt the color of the image to
+        image = image.withRenderingMode(.alwaysTemplate)
+        
+        var clearImageView = UIImageView()
         if Clear.ViewSize > Clear.ImageSize {
-            clearImageView.frame.origin.x = (Clear.ViewSize - Clear.ImageSize) / 2.0
-            clearImageView.frame.origin.y = (Clear.ViewSize - Clear.ImageSize) / 2.0
+            clearImageView = UIImageView.init(frame: CGRect.init(x: (Clear.ViewSize - Clear.ImageSize) / 2.0,
+                                                                     y: (Clear.ViewSize - Clear.ImageSize) / 2.0,
+                                                                     width: Clear.ImageSize,
+                                                                     height: Clear.ImageSize))
         } else {
             assert(true, "ImageView can not be larger than Image")
         }
-        
+        clearImageView.tintColor = self.tagBackgroundColor
+        clearImageView.contentMode = .scaleAspectFit
+        clearImageView.image = image
+
         // put the image in another view in order to have a margin around the image
         let clearView = UIView(frame: CGRect.init(x: 0, y: 0, width: Clear.ViewSize, height: Clear.ViewSize))
 
@@ -957,9 +964,13 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         // And vertically centered in the TagListView
         // Note that if TagListView is in another view, you might not see it.
 
+        //print("bef",clearView.frame)
+
         clearView.frame.origin.x = frame.size.width - clearView.frame.size.width
         clearView.frame.origin.y = (frame.size.height - clearView.frame.size.height) / 2.0
         
+        //print("F",frame)
+        // print(clearView.frame)
         addSubview(clearView)
     }
     

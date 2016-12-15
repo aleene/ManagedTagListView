@@ -213,6 +213,10 @@ open class TagView: UIView {
         didSet {
             if removeButtonIsEnabled {
                 removeButtonWidthConstraint.constant = Constants.RemoveButtonWidth
+                var currentImage = removeButton.currentImage
+                currentImage = currentImage!.withRenderingMode(.alwaysTemplate)
+                removeButton.setImage(currentImage, for: .normal)
+                removeButton.tintColor = textColor
                 tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(TagView.removeButtonTapped(_:)))
                 removeButton.addGestureRecognizer(tapGestureRecognizer)
 

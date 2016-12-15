@@ -18,7 +18,6 @@
 		516A7A571DFC50D80010BF95 /* TagTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A561DFC50D80010BF95 /* TagTableViewController.swift */; };
 		516A7A591DFC50F30010BF95 /* TagsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A581DFC50F30010BF95 /* TagsTableViewCell.swift */; };
 		51CF42C11DFC56CD00C9AD91 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CF42C01DFC56CC00C9AD91 /* ViewController.swift */; };
-		51CF42C31E02A5F700C9AD91 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 51CF42C21E02A5F600C9AD91 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -181,7 +180,6 @@
 				516A7A571DFC50D80010BF95 /* TagTableViewController.swift in Sources */,
 				516A7A361DFB21DF0010BF95 /* AppDelegate.swift in Sources */,
 				51CF42C11DFC56CD00C9AD91 /* ViewController.swift in Sources */,
-				51CF42C31E02A5F700C9AD91 /* README.md in Sources */,
 				516A7A4C1DFC4F840010BF95 /* TagView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
