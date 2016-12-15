@@ -21,15 +21,9 @@ tagListView.horizontalPadding = 5
 tagListView.verticalMargin = 2
 tagListView.horizontalMargin = 5
 tagListView.textFont = UIFont.systemFontOfSize(24)
-tagListView.alignment = .Center // possible values are .Left, .Center, and .Right
-tagListView.alignment = UIFont.systemFont(ofSize: 15)
-tagListView.alignment.shadowRadius = 2
-tagListView.alignment.shadowOpacity = 0.4
-tagListView.alignment.shadowColor = UIColor.black
-tagListView.alignment.shadowOffset = CGSize(width: 1, height: 1)
 tagListView.prefixLabelTextColor = UIColor.white
-tagListView.prefixLabelBackgroundColor = UICOlor.red
-tagListView.prefixLabelText = "This is prefix text" // if not defined there will be no refix label
+tagListView.prefixLabelBackgroundColor = UIColor.red
+tagListView.prefixLabelText = "This is prefix text" // if not defined there will be no prefix label
 ```
 ## Setting up Delegate/Datasource functions
 TagViewList support several delegate and datasource functions, which you can use. First setup your viewController as delegate:
@@ -49,16 +43,16 @@ func tagListView(_ tagListView: TagListView, titleForTagAt index: Int) -> String
 ```
 All other delegate- and datasource-functions are optional.
 ## Setting the mode
-ManagedTagListView can work in two modes: select- (non-edit) and edit-mode. You can set the mode of a tagListView with `isEditable = true/false`.
+ManagedTagListView can work in two modes: select- (non-edit) and edit-mode. You can set the mode of a tagListView with `isEditable = false` (default).
 
 ### Select-mode
-In select-mode the user can tap tags in order to select them. With `tagListView.allowsMultipleSelection = true/false` the user is allowed to select multiple tags. This is the default mode.
+In select-mode the user can tap tags in order to select them. With `tagListView.allowsMultipleSelection = false` (default) the user is allowed to select multiple tags.
 
 The user can set up the layout of selected tags with:
 ```swift
-tagListView.selectedTextColor = UIColor.white
-tagListView.tagSelectedBackgroundColor = UIColor.green
-tagListView.selectedBorderColor: UIColor = UIColor.black
+tagListView.selectedTextColor = UIColor.white // (default)
+tagListView.tagSelectedBackgroundColor = UIColor.blue // (default)
+tagListView.selectedBorderColor: UIColor = UIColor.blue // (default)
 ```
 
 The user can change the selection status tags programmatically:
@@ -86,17 +80,17 @@ It is possible to finetune what is allowed with:
 - `allowsCreation = true` (default), which allows the user to add tags, by tapping on the tagViewList;
 - `allowsReordering = true` (default), which allows the user to reorder tags by drag&drop; 
 
-If it is allowed to remove a tag, its appearance can be adjusted with:
+If the user is allowed to remove a tag, its appearance can be adjusted with:
 ```swift
-tagListView.highlightedTextColor = .red // defines the colour of the text of highlighted tags
-tagListView.tagHighlightedBackgroundColor = .green // defines the background colours of highlighted tags
-tagListView.highlightedBorderColor = .black // defines the border colour of highlighted tags
+tagListView.highlightedTextColor = .white // (default) defines the colour of the text of highlighted tags
+tagListView.tagHighlightedBackgroundColor = .blue // (default) defines the background colours of highlighted tags
+tagListView.highlightedBorderColor = .blue // (default) defines the border colour of highlighted tags
 ```
-You can intercept the edit-instructions with the appropriate delegate functions.
+You can intercept the edit-instructions with several delegate functions:
 ```swift
-func tagListView(_ tagListView: TagListView, canEditTagAt index: Int) -> Bool
-func tagListView(_ tagListView: TagListView, canMoveTagAt index: Int) -> Bool
-func tagListView(_ tagListView: TagListView, moveTagAt sourceIndex: Int, to destinationIndex: Int)
+func tagListView(_ tagListView: TagListView, canEditTagAt index: Int) -> Bool // called before a tag will be edited
+func tagListView(_ tagListView: TagListView, canMoveTagAt index: Int) -> Bool // called before a tag is moved
+func tagListView(_ tagListView: TagListView, moveTagAt sourceIndex: Int, to destinationIndex: Int) // called after a tag is moved
 ```
 You can follow the actions around edit actions with:
 ```swift

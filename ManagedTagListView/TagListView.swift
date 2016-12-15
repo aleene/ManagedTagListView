@@ -945,19 +945,15 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     
     private func layoutClearView() {
         
-        // The clearView should only be added in editMode and if deletion is allowed
+        // The clearView should only be added in editMode, if deletion is allowed and if a clear button is wanted
         
         // The clearView appears on the trailing edge
         // And vertically centered in the TagListView
         // Note that if TagListView is in another view, you might not see it.
 
-        //print("bef",clearView.frame)
-
         clearView.frame.origin.x = frame.size.width - clearView.frame.size.width
         clearView.frame.origin.y = (frame.size.height - clearView.frame.size.height) / 2.0
         
-        //print("F",frame)
-        // print(clearView.frame)
         addSubview(clearView)
     }
     
@@ -1064,13 +1060,6 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         rearrangeViews(true)
         
         return tagView
-    }
-     */
-
-    /*
-    private func setTitle(_ title: String, at index: Int) {
-        tagViews[index].title = title
-        rearrangeViews(true)
     }
      */
     
@@ -1390,7 +1379,18 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
             case UIGestureRecognizerState.changed:
                 if longPressViewSnapshot != nil {
                     // move the snapshot to current press location
-                    longPressViewSnapshot!.center = locationInView
+                    var newLocation = locationInView
+                    if newLocation.x < frame.origin.x {
+                        newLocation.x = frame.origin.x
+                    } else if newLocation.x > frame.origin.x + frame.size.width {
+                        newLocation.x = frame.origin.x + frame.size.width
+                    }
+                    if newLocation.y < frame.origin.y {
+                        newLocation.y = frame.origin.y
+                    } else if newLocation.y > frame.origin.y + frame.size.height {
+                        newLocation.y = frame.origin.y + frame.size.height
+                    }
+                    longPressViewSnapshot!.center = newLocation
                     if let validDestinationIndex = index,
                         let validSourceIndex = self.longPressInitialIndex {
                         if validDestinationIndex != validSourceIndex {
