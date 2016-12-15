@@ -57,11 +57,10 @@ class ViewController: UIViewController, TagListViewDelegate, TagListViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tagListView.hasPrefixLabel = true
         tagListView.delegate = self
         tagListView.datasource = self
         tagListView.isEditable = true
-        tagListView.textColor = .red
+        // tagListView.textColor = .red
         
         // setup biggerTagListView
         
@@ -74,7 +73,6 @@ class ViewController: UIViewController, TagListViewDelegate, TagListViewDataSour
         biggerTagListView.shadowOffset = CGSize(width: 1, height: 1)
         // biggerTagListView.alignment = .center
         biggerTagListView.prefixLabelText = "BTLV "
-        biggerTagListView.hasPrefixLabel = true
         biggerTagListView.isEditable = true
         
         // This is an example of a TagListView, wich allows reordering

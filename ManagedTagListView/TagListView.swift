@@ -105,10 +105,6 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         static let defaultShadowOffset: CGSize = CGSize.init(width: -20.0, height: 0.0)
         /// Default opacity for shadow
         static let defaultshadowOpacity: Float = 0
-        /// Default to label text
-        static let defaultPrefixLabelText: String = NSLocalizedString("To:", comment: "Text in the prefix label")
-        /// Default to label text
-        static let defaultNoPrefixLabel = false
         /// Default image used for the Clear and Remove button, similar to the one used in UITextField
         static let clearRemoveImage: UIImage? = UIImage.init(named: "Clear")
     }
@@ -136,9 +132,9 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     }
 
     /// To label text.
-    @IBInspectable open dynamic var prefixLabelText = Constants.defaultPrefixLabelText {
+    @IBInspectable open dynamic var prefixLabelText: String? = nil {
         didSet {
-            if prefixLabel == nil {
+            if prefixLabelText != nil {
                 setupPrefixLabel()
             }
             prefixLabel?.text = prefixLabelText
@@ -149,14 +145,6 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     @IBInspectable open dynamic var inputTextViewTextColor = Constants.defaultTextInputColor{
         didSet {
             inputTextView.textColor = inputTextViewTextColor
-        }
-    }
-    
-    @IBInspectable open dynamic var hasPrefixLabel = Constants.defaultNoPrefixLabel {
-        didSet {
-            if hasPrefixLabel && prefixLabel == nil {
-                setupPrefixLabel()
-            }
         }
     }
 
@@ -447,7 +435,6 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         inputTextView.delegate = self
         inputTextView.backspaceDelegate = self
         // TODO: - Add placeholder to BackspaceTextView and set it here
-        inputTextView.accessibilityLabel = self.accessibilityLabel ?? Constants.defaultPrefixLabelText
         inputTextView.inputAccessoryView = self.inputTextViewAccessoryView
         inputTextView.accessibilityLabel = self.inputTextViewAccessibilityLabel
         inputTextView.textAlignment = .left
@@ -685,7 +672,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
 
         // Add the prefix Label
         
-        if hasPrefixLabel {
+        if prefixLabelText != nil {
             layoutPrefixLabel(origin: CGPoint.zero, currentX: &currentX)
         }
         
@@ -740,7 +727,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
          */
         var currentX: CGFloat = 0.0
         
-        if hasPrefixLabel {
+        if prefixLabelText != nil {
             layoutPrefixLabel(origin: CGPoint(x: Constants.defaultHorizontalMargin, y: Constants.defaultVerticalMargin), currentX: &currentX)
         }
         
@@ -899,12 +886,12 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         //let inputHeight = inputTextView.intrinsicContentSize.height > Constants.defaultTagHeight
         //    ? inputTextView.intrinsicContentSize.height
         //    : Constants.defaultTagHeight
-        let inputHeight = Constants.defaultTagHeight
+        let inputHeight = tagViewHeight
         // Is there enough space for a reasonable inputTextView
         if currentX + Constants.defaultMinInputWidth >= frame.size.width {
             // start with a new row
             inputTextViewOrigin.x = CGFloat(0.0)
-            inputTextViewOrigin.y = currentY + Constants.defaultTagHeight + Constants.defaultVerticalPadding
+            inputTextViewOrigin.y = currentY + tagViewHeight + Constants.defaultVerticalPadding
         }
         inputTextView.frame = CGRect(
             x: inputTextViewOrigin.x,
