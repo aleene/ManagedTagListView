@@ -36,9 +36,10 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" horizontalCompressionResistancePriority="752" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NHO-JS-fit">
-                            <rect key="frame" x="99" y="11.5" width="24" height="25"/>
+                            <rect key="frame" x="106" y="17.5" width="13" height="13"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="24" id="fRY-Nz-Bag"/>
+                                <constraint firstAttribute="height" constant="13" id="Cx4-Ef-Aqa"/>
+                                <constraint firstAttribute="width" constant="13" id="fRY-Nz-Bag"/>
                             </constraints>
                             <state key="normal" title="Button" image="Delete"/>
                             <connections>
@@ -52,7 +53,7 @@
                         <constraint firstAttribute="trailing" secondItem="0FF-5S-vXq" secondAttribute="trailing" id="BY3-rd-LPv"/>
                         <constraint firstAttribute="bottom" secondItem="0FF-5S-vXq" secondAttribute="bottom" id="Ny5-Q4-Dd4"/>
                         <constraint firstItem="0FF-5S-vXq" firstAttribute="leading" secondItem="65R-BH-Ljd" secondAttribute="leading" id="V52-g6-ZAR"/>
-                        <constraint firstAttribute="trailing" secondItem="NHO-JS-fit" secondAttribute="trailing" id="eiD-fM-HnV"/>
+                        <constraint firstAttribute="trailing" secondItem="NHO-JS-fit" secondAttribute="trailing" constant="4" id="eiD-fM-HnV"/>
                         <constraint firstItem="0FF-5S-vXq" firstAttribute="top" secondItem="65R-BH-Ljd" secondAttribute="top" id="w3J-8Q-KCK"/>
                     </constraints>
                 </view>

@@ -89,7 +89,7 @@ class TagTableViewController: UITableViewController, TagListViewDelegate, TagLis
     
     func tagListView(_ tagListView: TagListView, didDeleteTagAt index: Int) {
         print("The tag with index", index, "has been selected")
-        print(tagListView.selectedTags().count, "tags have been selected")
+        print(tagListView.selectedTags.count, "tags have been selected")
         if editMode {
             tags.remove(at: index)
             tableView.reloadData()
@@ -148,7 +148,7 @@ class TagTableViewController: UITableViewController, TagListViewDelegate, TagLis
         return tags[index]
     }
     
-    func numberOfTagsInTagListView(_ tagListView: TagListView) -> Int {
+    func numberOfTagsIn(_ tagListView: TagListView) -> Int {
         return tags.count
     }
     

@@ -18,7 +18,7 @@ public protocol TagViewDelegate: class {
 open class TagView: UIView {
     
     private struct Constants {
-        static let RemoveButtonWidth: CGFloat = 24.0
+        static let RemoveButtonWidth: CGFloat = 13.0
         /// Default maximum height = 150.0
         static let defaultCornerRadius: CGFloat = 0.0
         /// Default border width
@@ -37,9 +37,9 @@ open class TagView: UIView {
         static let defaultHorizontalPadding: CGFloat = 5.0
         
         /// Default offset for shadow
-        static let defaultShadowOffset = CGSize.init(width: -20.0, height: 0.0)
+        static let defaultShadowOffset = CGSize.init(width: 1.0, height: 1.0)
         /// Default opacity for shadow
-        static let defaultShadowOpacity: Float = 1
+        static let defaultShadowOpacity: Float = 0.0
     }
 
     @IBInspectable open var cornerRadius = Constants.defaultCornerRadius {
@@ -98,7 +98,7 @@ open class TagView: UIView {
         }
     }
     
-    @IBInspectable open var highlightedBackgroundColor = Constants.defaultBackgroundColor {
+    @IBInspectable open var tagHighlightedBackgroundColor = Constants.defaultBackgroundColor {
         didSet {
             reloadStyles()
         }
@@ -117,7 +117,7 @@ open class TagView: UIView {
         }
     }
     
-    @IBInspectable open var selectedBackgroundColor = Constants.defaultBackgroundColor {
+    @IBInspectable open var tagSelectedBackgroundColor = Constants.defaultBackgroundColor {
         didSet {
             reloadStyles()
         }
@@ -156,12 +156,12 @@ open class TagView: UIView {
 
     private func reloadStyles() {
         if isHighlighted {
-            shadow.backgroundColor = highlightedBackgroundColor
+            shadow.backgroundColor = tagHighlightedBackgroundColor
             label.textColor = highlightedTextColor
             shadow.layer.borderColor = highlightedBorderColor.cgColor
                     }
         else if isSelected {
-            shadow.backgroundColor = selectedBackgroundColor
+            shadow.backgroundColor = tagSelectedBackgroundColor
             label.textColor = selectedTextColor
             shadow.layer.borderColor = selectedBorderColor.cgColor
         }
