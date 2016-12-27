@@ -24,7 +24,7 @@ class TagsTableViewCell: UITableViewCell {
 
     var editMode = false {
         didSet {
-            tagListView?.isEditable = editMode
+            tagListView?.allowsRemoval = editMode
         }
     }
     
@@ -36,7 +36,7 @@ class TagsTableViewCell: UITableViewCell {
             tagListView.cornerRadius = 10
             tagListView.delegate = delegate
             tagListView.datasource = datasource
-            tagListView.isEditable = editMode
+            tagListView.allowsRemoval = editMode
         }
     }
 }

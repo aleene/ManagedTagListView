@@ -7,7 +7,7 @@
 //
 import UIKit
 
-class ViewController: UIViewController, TagListViewDelegate, TagListViewDataSource {
+class ViewController: UIViewController {
     
     @IBOutlet weak var tagListView: TagListView! {
         didSet {
@@ -49,17 +49,17 @@ class ViewController: UIViewController, TagListViewDelegate, TagListViewDataSour
         }
     }
     
-    private var tagListViewTags = ["TagListViewTEST", "TEAChart", "To Be Removed", "To Be Removed", "Quark Shell", "On tap will be removed", "TLV "]
-    private var biggerTagListViewTags = ["Inboard", "Pomotodo", "Halo Word"]
-    private var biggestTagListViewTags = ["These", "tags", "can", "be", "reordered", "by", "drag&drop", "NOT this one"]
-    private var scrollViewTagListViewTags = ["This","is","a","TagListView","within","a","scrollView.","If", "the","data","do","not","fit","the","view","you","should","be","able","to","scroll","around.","This","is","a","TagListView","within","a","scrollView.","If", "the","data","do","not","fit","the","view","you","should","be","able","to","scroll","around.","This","is","a","TagListView","within","a","scrollView.","If", "the","data","do","not","fit","the","view","you","should","be","able","to","scroll","around.","This","is","a","TagListView","within","a","scrollView.","If", "the","data","do","not","fit","the","view","you","should","be","able","to","scroll","around."]
+    fileprivate var tagListViewTags = ["TagListViewTEST", "TEAChart", "To Be Removed", "To Be Removed", "Quark Shell", "On tap will be removed", "TLV "]
+    fileprivate var biggerTagListViewTags = ["Inboard", "Pomotodo", "Halo Word"]
+    fileprivate var biggestTagListViewTags = ["These", "tags", "can", "be", "reordered", "by", "drag&drop", "NOT this one"]
+    fileprivate var scrollViewTagListViewTags = ["This","is","a","TagListView","within","a","scrollView.","If", "the","data","do","not","fit","the","view","you","should","be","able","to","scroll","around.","This","is","a","TagListView","within","a","scrollView.","If", "the","data","do","not","fit","the","view","you","should","be","able","to","scroll","around.","This","is","a","TagListView","within","a","scrollView.","If", "the","data","do","not","fit","the","view","you","should","be","able","to","scroll","around.","This","is","a","TagListView","within","a","scrollView.","If", "the","data","do","not","fit","the","view","you","should","be","able","to","scroll","around."]
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tagListView.delegate = self
         tagListView.datasource = self
-        tagListView.isEditable = true
+        tagListView.allowsCreation = true
         // tagListView.textColor = .red
         
         // setup biggerTagListView
@@ -73,7 +73,7 @@ class ViewController: UIViewController, TagListViewDelegate, TagListViewDataSour
         biggerTagListView.shadowOffset = CGSize(width: 1, height: 1)
         // biggerTagListView.alignment = .center
         biggerTagListView.prefixLabelText = "BTLV "
-        biggerTagListView.isEditable = true
+        biggerTagListView.allowsRemoval = true
         
         // This is an example of a TagListView, wich allows reordering
         // The data is found in biggestTagListViewTags
@@ -85,7 +85,7 @@ class ViewController: UIViewController, TagListViewDelegate, TagListViewDataSour
         biggestTagListView.textFont = UIFont.systemFont(ofSize: 24)
         // biggestTagListView.alignment = .right
         // set to editable to allow reordering
-        biggestTagListView.isEditable = true
+        biggestTagListView.allowsReordering = true
         biggestTagListView.allowsRemoval = false
         
         // This is an example of a TagListView inside a UIScrollView
@@ -96,42 +96,36 @@ class ViewController: UIViewController, TagListViewDelegate, TagListViewDataSour
         
         multipleSelectionIsAllowed = false
     }
+
+    @IBAction func updateTitleDemo(_ sender: UIButton) {
+        biggerTagListViewTags[1] = "New Title"
+        biggerTagListView.reloadData()
+    }
     
+    @IBAction func collapseButtonTapped(_ sender: UIButton) {
+        // tagListView.isCollapsed = !tagListView.isCollapsed
+        tagListView.borderWidth = 5.0
+    }
+    
+    @IBAction func unwindToViewController(_ segue:UIStoryboardSegue) {
+    }
 
-    // MARK: TagListViewDatasource Functions
+}
 
-    func tagListView(_ tagListView: TagListView, canMoveTagAt index: Int) -> Bool {
+// MARK: TagListViewDelegate Functions
+
+extension ViewController: TagListViewDelegate {
+    
+    
+    func tagListView(_ tagListView: TagListView, willDisplay tagView: TagView, at index: Int) -> TagView? {
         if tagListView === biggestTagListView {
-            return index == biggestTagListViewTags.count - 1 ? false : true
-        } else {
-            return true
+            if index == 2 {
+                tagView.normalColorScheme.backgroundColor = .gray
+                return tagView
+            }
         }
+        return nil
     }
-    
-    func tagListView(_ tagListView: TagListView, moveTagAt sourceIndex: Int, to destinationIndex: Int) {
-        if tagListView === biggestTagListView {
-            biggestTagListViewTags.insert(biggestTagListViewTags.remove(at: sourceIndex), at: destinationIndex)
-            print(biggestTagListViewTags)
-        }
-    }
-    
-    func tagListView(_ tagListView: TagListView, didDeleteTagAt index: Int) {
-        if tagListView === self.tagListView {
-            tagListViewTags.remove(at: index)
-        } else if tagListView === biggerTagListView {
-            biggerTagListViewTags.remove(at: index)
-        } else if tagListView === biggestTagListView {
-            biggestTagListViewTags.remove(at: index)
-        }
-    }
-    
-    func didClear(_ tagListView: TagListView) {
-        if tagListView === biggerTagListView {
-            biggerTagListViewTags = []
-        }
-    }
-
-    // MARK: TagListViewDelegate Functions
     
     func tagListView(_ tagListView: TagListView, targetForMoveFromTagAt sourceIndex: Int,
                      toProposed proposedDestinationIndex: Int) -> Int {
@@ -161,11 +155,11 @@ class ViewController: UIViewController, TagListViewDelegate, TagListViewDataSour
                 return true
             }
         } else if tagListView === self.biggerTagListView {
-            return biggerTagListView.isEditable
+            return biggerTagListView.allowsRemoval
         } else if tagListView === self.biggestTagListView {
-            return biggestTagListView.isEditable
+            return biggestTagListView.allowsRemoval
         } else if tagListView === self.scrollViewTagListView {
-            return scrollViewTagListView.isEditable
+            return scrollViewTagListView.allowsRemoval
         }
         return false
     }
@@ -178,7 +172,36 @@ class ViewController: UIViewController, TagListViewDelegate, TagListViewDataSour
         
     }
 
-    // MARK: - TagListView dataSource functions
+    func tagListView(_ tagListView: TagListView, didDeleteTagAt index: Int) {
+        if tagListView === self.tagListView {
+            tagListViewTags.remove(at: index)
+        } else if tagListView === biggerTagListView {
+            biggerTagListViewTags.remove(at: index)
+        } else if tagListView === biggestTagListView {
+            biggestTagListViewTags.remove(at: index)
+        }
+    }
+
+    
+    public func tagListView(_ tagListView: TagListView, didSelectTagAt index: Int) {
+    }
+    
+    public func tagListView(_ tagListView: TagListView, willSelectTagAt index: Int) {
+    }
+    
+    public func tagListView(_ tagListView: TagListView, didDeselectTagAt index: Int) {
+    }
+    
+    public func tagListView(_ tagListView: TagListView, willDeselectTagAt index: Int) {
+    }
+    /// Called when the TagListView's content height changes.
+    public func tagListView(_ tagListView: TagListView, didChange height: CGFloat) {
+    }
+
+}
+// MARK: - TagListView dataSource functions
+
+extension ViewController: TagListViewDataSource {
     
     func tagListView(_ tagListView: TagListView, titleForTagAt index: Int) -> String {
         if tagListView === self.tagListView {
@@ -208,17 +231,30 @@ class ViewController: UIViewController, TagListViewDelegate, TagListViewDataSour
         }
     }
     
-    @IBAction func updateTitleDemo(_ sender: UIButton) {
-        biggerTagListViewTags[1] = "New Title"
-        biggerTagListView.reloadData()
+    func tagListView(_ tagListView: TagListView, canMoveTagAt index: Int) -> Bool {
+        if tagListView === biggestTagListView {
+            return index == biggestTagListViewTags.count - 1 ? false : true
+        } else {
+            return true
+        }
     }
     
-    @IBAction func collapseButtonTapped(_ sender: UIButton) {
-        // tagListView.isCollapsed = !tagListView.isCollapsed
-        tagListView.borderWidth = 5.0
+    func tagListView(_ tagListView: TagListView, moveTagAt sourceIndex: Int, to destinationIndex: Int) {
+        if tagListView === biggestTagListView {
+            biggestTagListViewTags.insert(biggestTagListViewTags.remove(at: sourceIndex), at: destinationIndex)
+            print(biggestTagListViewTags)
+        }
     }
     
-    @IBAction func unwindToViewController(_ segue:UIStoryboardSegue) {
+    func didClear(_ tagListView: TagListView) {
+        if tagListView === biggerTagListView {
+            biggerTagListViewTags = []
+        }
+    }
+
+    /// Which text should be displayed when the TagListView is collapsed?
+    public func tagListViewCollapsedText(_ tagListView: TagListView) -> String {
+        return "Collapsed"
     }
 
 }

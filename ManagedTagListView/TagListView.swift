@@ -8,67 +8,72 @@
 
 import UIKit
 
+// MARK: - TagListView PureDelegate functions
+public protocol TagListViewPureDelegate {
+    func tagListView(_ tagListView: TagListView, willDisplay tagView: TagView, at index: Int) -> TagView?
+}
 // MARK: - TagListView Delegate Functions
 
-@objc public protocol TagListViewDelegate {
+public protocol TagListViewDelegate {
     // @objc optional func tagPressed(_ title: String, tagView: TagView, sender: TagListView) -> Void
     // @objc optional func tagRemoveButtonPressed(_ title: String, tagView: TagView, sender: TagListView) -> Void
-    @objc optional func tagListView(_ tagListView: TagListView, didSelectTagAt index: Int) -> Void
-    @objc optional func tagListView(_ tagListView: TagListView, willSelectTagAt index: Int) -> Int
-    @objc optional func tagListView(_ tagListView: TagListView, didDeselectTagAt index: Int) -> Void
-    @objc optional func tagListView(_ tagListView: TagListView, willDeselectTagAt index: Int) -> Int
-    @objc optional func tagListView(_ tagListView: TagListView, willBeginEditingTagAt index: Int)
-    @objc optional func tagListView(_ tagListView: TagListView, didEndEditingTagAt index: Int)
-    @objc optional func tagListView(_ tagListView: TagListView, targetForMoveFromTagAt sourceIndex: Int,
-                            toProposed proposedDestinationIndex: Int) -> Int
-    @objc optional func tagListView(_ tagListView: TagListView, didAddTagWith title: String)
-    @objc optional func tagListView(_ tagListView: TagListView, willDisplay: TagView) -> TagView
+    func tagListView(_ tagListView: TagListView, didSelectTagAt index: Int)
+    func tagListView(_ tagListView: TagListView, willSelectTagAt index: Int)
+    func tagListView(_ tagListView: TagListView, didDeselectTagAt index: Int)
+    func tagListView(_ tagListView: TagListView, willDeselectTagAt index: Int)
+    func tagListView(_ tagListView: TagListView, willBeginEditingTagAt index: Int)
+    func tagListView(_ tagListView: TagListView, didEndEditingTagAt index: Int)
+    func tagListView(_ tagListView: TagListView, targetForMoveFromTagAt sourceIndex: Int,
+                                    toProposed proposedDestinationIndex: Int) -> Int
+    func tagListView(_ tagListView: TagListView, didAddTagWith title: String)
     
     /// Called when the user returns for a given input.
     ///func tagListView(_ tagListView: TagListView, didEnter text: String)
     /// Called when the user tries to delete a tag at the given index.
-    @objc optional func tagListView(_ tagListView: TagListView, didDeleteTagAt index: Int)
-
+    func tagListView(_ tagListView: TagListView, didDeleteTagAt index: Int)
+    
     /// Called when the user changes the text in the textField.
     ///func tagListView(_ tagListView: TagListView, didChange text: String)
     /// Called when the TagListView did begin editing.
     ///func tagListViewDidBeginEditing(_ tagListView: TagListView)
     /// Called when the TagListView's content height changes.
-    ///func tagListView(_ tagListView: TagListView, didChangeContent height: CGFloat)
+    func tagListView(_ tagListView: TagListView, didChange height: CGFloat)
 }
 
 // MARK: - TagListView DataSource Functions
 
-@objc public protocol TagListViewDataSource {
+public protocol TagListViewDataSource {
     /// Is it allowed to edit a Tag object at a given index?
-    @objc optional func tagListView(_ tagListView: TagListView, canEditTagAt index: Int) -> Bool
+    func tagListView(_ tagListView: TagListView, canEditTagAt index: Int) -> Bool
     /// Is it allowed to move a Tag object at a given index?
-    @objc optional func tagListView(_ tagListView: TagListView, canMoveTagAt index: Int) -> Bool
+    func tagListView(_ tagListView: TagListView, canMoveTagAt index: Int) -> Bool
     /// The Tag object at the source index has been moved to a destination index.
-    @objc optional func tagListView(_ tagListView: TagListView, moveTagAt sourceIndex: Int, to destinationIndex: Int)
+    func tagListView(_ tagListView: TagListView, moveTagAt sourceIndex: Int, to destinationIndex: Int)
     /// What is the title for the Tag object at a given index?
     func tagListView(_ tagListView: TagListView, titleForTagAt index: Int) -> String
     /// What are the number of Tag objects in the TagListView?
     func numberOfTagsIn(_ tagListView: TagListView) -> Int
-    /// Caled if the user wants to delete all tags
-    @objc optional func didClear(_ tagListView: TagListView)
-
+    /// Called if the user wants to delete all tags
+    func didClear(_ tagListView: TagListView)
+    
     /// Which text should be displayed when the TagListView is collapsed?
-    @objc optional func tagListViewCollapsedText(_ tagListView: TagListView) -> String
+    func tagListViewCollapsedText(_ tagListView: TagListView) -> String
 }
 
 // MARK: - TagListView CLASS
 
 @IBDesignable
-open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITextViewDelegate {
+open class TagListView: UIView, TagViewDelegate, BackspaceTextFieldDelegate {
     
-    @IBOutlet open weak var delegate: TagListViewDelegate?
-    @IBOutlet open weak var datasource: TagListViewDataSource? {
+    open var pureDelegate: TagListViewPureDelegate? = nil
+    
+    open var delegate: TagListViewDelegate? = nil
+    open var datasource: TagListViewDataSource? = nil {
         didSet {
             reloadData()
         }
     }
-
+    
     //MARK: - Default values
     
     private struct Constants {
@@ -78,8 +83,8 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         static let defaultMinInputWidth: CGFloat = 80.0
         /// Default tag height
         static let defaultTagHeight: CGFloat = 30.0
-
-    
+        
+        
         static let defaultCornerRadius: CGFloat = 0.0
         /// Default border width
         static let defaultBorderWidth: CGFloat = 0.0
@@ -130,7 +135,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
             prefixLabel?.backgroundColor = prefixLabelBackgroundColor
         }
     }
-
+    
     /// To label text.
     @IBInspectable open dynamic var prefixLabelText: String? = nil {
         didSet {
@@ -144,50 +149,49 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     /// Input textView text color.
     @IBInspectable open dynamic var inputTextViewTextColor = Constants.defaultTextInputColor{
         didSet {
-            inputTextView.textColor = inputTextViewTextColor
+            inputTextField.textColor = inputTextViewTextColor
         }
     }
-
+    
     @IBInspectable open dynamic var textColor = Constants.defaultTextColor {
         didSet {
-            tagViews.forEach { $0.textColor = textColor }
+            normalColorScheme.textColor = textColor
         }
     }
     
     @IBInspectable open dynamic var selectedTextColor = Constants.defaultTextColor {
         didSet {
-            tagViews.forEach { $0.selectedTextColor = selectedTextColor }
+            selectedColorScheme.textColor = selectedTextColor
         }
     }
     
     @IBInspectable open dynamic var highlightedTextColor = Constants.defaultTextColor {
         didSet {
-            tagViews.forEach { $0.highlightedTextColor = highlightedTextColor }
+            removableColorScheme.textColor = highlightedTextColor
         }
     }
-
     
     @IBInspectable open dynamic var tagBackgroundColor = Constants.defaultBackgroundColor {
         didSet {
-            tagViews.forEach { $0.tagBackgroundColor = tagBackgroundColor }
+            normalColorScheme.backgroundColor = tagBackgroundColor
         }
     }
     
     @IBInspectable open dynamic var tagHighlightedBackgroundColor = Constants.defaultBackgroundColor {
         didSet {
-            tagViews.forEach { $0.tagHighlightedBackgroundColor = tagHighlightedBackgroundColor }
+            removableColorScheme.backgroundColor = tagHighlightedBackgroundColor
         }
     }
     
     @IBInspectable open dynamic var tagSelectedBackgroundColor = Constants.defaultBackgroundColor {
         didSet {
-            tagViews.forEach { $0.tagSelectedBackgroundColor = tagSelectedBackgroundColor }
+            selectedColorScheme.backgroundColor = tagSelectedBackgroundColor
         }
     }
     
     @IBInspectable open dynamic var cornerRadius = Constants.defaultCornerRadius {
         didSet {
-            // requires rearrangig the tagViews.
+            // requires rearranging the tagViews.
             rearrangeViews(true)
         }
     }
@@ -199,22 +203,41 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     
     @IBInspectable open dynamic var borderColor = Constants.defaultBorderColor {
         didSet {
-            tagViews.forEach { $0.borderColor = borderColor }
+            normalColorScheme.borderColor = borderColor
         }
     }
     
     @IBInspectable open dynamic var selectedBorderColor = Constants.defaultBorderColor {
         didSet {
-            tagViews.forEach { $0.selectedBorderColor = selectedBorderColor }
+            selectedColorScheme.borderColor = selectedBorderColor
         }
     }
     
     @IBInspectable open dynamic var highlightedBorderColor = Constants.defaultBorderColor {
         didSet {
-            tagViews.forEach { $0.highlightedBorderColor = highlightedBorderColor }
+            removableColorScheme.borderColor = highlightedBorderColor
         }
     }
-
+    
+    
+    open var normalColorScheme = ColorScheme.init() {
+        didSet {
+            tagViews.forEach { $0.normalColorScheme = normalColorScheme }
+        }
+    }
+    
+    open var selectedColorScheme = ColorScheme.init() {
+        didSet {
+            tagViews.forEach { $0.selectedColorScheme = selectedColorScheme }
+        }
+    }
+    
+    open var removableColorScheme = ColorScheme.init() {
+        didSet {
+            setClearAllImageColor()
+            tagViews.forEach { $0.removableColorScheme = removableColorScheme }
+        }
+    }
     
     @IBInspectable open dynamic var verticalPadding = Constants.defaultVerticalPadding {
         didSet {
@@ -287,14 +310,14 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     @IBInspectable open dynamic var clearRemoveImage: UIImage? = Constants.clearRemoveImage
     
     // MARK: - Public? variables
-
+    
     /// Input textView accessibility label.
     public var inputTextViewAccessibilityLabel: String! {
         didSet {
-            inputTextView.accessibilityLabel = inputTextViewAccessibilityLabel
+            inputTextField.accessibilityLabel = inputTextViewAccessibilityLabel
         }
     }
-
+    
     // MARK: - Private
     
     /// TagListView's maximum height value.
@@ -312,22 +335,22 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     /// Autocorrection type for textView initial value .no
     public var autocorrectionType: UITextAutocorrectionType = .no {
         didSet {
-            inputTextView.autocorrectionType = autocorrectionType
+            inputTextField.autocorrectionType = autocorrectionType
         }
     }
     /// Autocapitalization type for textView inital value .sentences
     public var autocapitalizationType: UITextAutocapitalizationType = .sentences {
         didSet {
-            inputTextView.autocapitalizationType = autocapitalizationType
+            inputTextField.autocapitalizationType = autocapitalizationType
         }
     }
     /// Input accessory view for textView.
     public var inputTextViewAccessoryView: UIView? {
         didSet {
-            inputTextView.inputAccessoryView = inputTextViewAccessoryView
+            inputTextField.inputAccessoryView = inputTextViewAccessoryView
         }
     }
-
+    
     
     /// - Returns: `Bool` value which is true if the TagListView is the first responder.
     override open var isFirstResponder: Bool {
@@ -358,17 +381,25 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     
     private func initSetup() {
         originalHeight = frame.height
-        
+        delegate = self
+        datasource = self
         // addSubview(scrollView)
         reloadData()
     }
     
+    // If you identify a taglist by a tag, it needs to reload the data
+    override open var tag: Int {
+        didSet {
+            reloadData()
+        }
+    }
+    
     // MARK: - First Responder Functions
-
+    
     /// Resigns first responder.
     override open func resignFirstResponder() -> Bool {
         super.resignFirstResponder()
-        return inputTextView.resignFirstResponder()
+        return inputTextField.resignFirstResponder()
     }
     
     /// TagListView calls self.layoutTagsAndInputWithFrameAdjustment(true) and self.inputTextViewBecomeFirstResponder()
@@ -378,22 +409,22 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         inputTextViewBecomeFirstResponder()
         return true
     }
-
+    
     fileprivate func setCursorVisibility() {
-        let highlightedTagViews = tagViews.filter { $0.isHighlighted }
+        let highlightedTagViews = tagViews.filter { $0.state == .removable }
         if highlightedTagViews.count == 0 {
             inputTextViewBecomeFirstResponder()
         } else {
-            invisibleTextView.becomeFirstResponder()
+            invisibleTextField.becomeFirstResponder()
         }
     }
     
     private func inputTextViewBecomeFirstResponder() {
-        guard !inputTextView.isFirstResponder else { return }
-        inputTextView.becomeFirstResponder()
+        guard !inputTextField.isFirstResponder else { return }
+        inputTextField.becomeFirstResponder()
         // delegate?.tagListViewDidBeginEditing(self)
     }
-
+    
     // MARK: - The Views
     
     // Prefix label, is only created when needed
@@ -412,34 +443,37 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     
     // This textView has no size and is only to intervene for deletion
     
-    private lazy var invisibleTextView: BackspaceTextView = {
-        let invisibleTextView = BackspaceTextView(frame: CGRect.zero)
-        invisibleTextView.autocorrectionType = self.autocorrectionType
-        invisibleTextView.autocapitalizationType = self.autocapitalizationType
-        invisibleTextView.backspaceDelegate = self
-        return invisibleTextView
+    private lazy var invisibleTextField: BackspaceTextField = {
+        let invisibleTextField = BackspaceTextField(frame: CGRect.zero)
+        invisibleTextField.autocorrectionType = self.autocorrectionType
+        invisibleTextField.autocapitalizationType = self.autocapitalizationType
+        invisibleTextField.backspaceDelegate = self
+        return invisibleTextField
     }()
     
     // The TextView that allows the user to enter a new tag
-
-    private lazy var inputTextView: UITextView = {
-        let inputTextView = BackspaceTextView()
-        inputTextView.keyboardType = self.inputTextViewKeyboardType
-        inputTextView.textColor = self.inputTextViewTextColor
-        inputTextView.font = self.textFont
-        inputTextView.autocorrectionType = self.autocorrectionType
-        inputTextView.autocapitalizationType = self.autocapitalizationType
-        inputTextView.tintColor = UIColor.lightGray
-        inputTextView.isScrollEnabled = false
-        inputTextView.textContainer.lineBreakMode = .byWordWrapping
-        inputTextView.delegate = self
-        inputTextView.backspaceDelegate = self
+    
+    fileprivate lazy var inputTextField: UITextField = {
+        let inputTextField = BackspaceTextField()
+        inputTextField.keyboardType = self.inputTextViewKeyboardType
+        inputTextField.textColor = .black // self.removableColorScheme.textColor
+        // inputTextField.backgroundColor = .red
+        // inputTextField.borderColor = .blue
+        inputTextField.font = self.textFont
+        inputTextField.autocorrectionType = self.autocorrectionType
+        inputTextField.autocapitalizationType = self.autocapitalizationType
+        inputTextField.tintColor = .black
+        // inputTextView.isScrollEnabled = false
+        // inputTextView.textContainer.lineBreakMode = .byWordWrapping
+        inputTextField.delegate = self
+        inputTextField.backspaceDelegate = self
         // TODO: - Add placeholder to BackspaceTextView and set it here
-        inputTextView.inputAccessoryView = self.inputTextViewAccessoryView
-        inputTextView.accessibilityLabel = self.inputTextViewAccessibilityLabel
-        inputTextView.textAlignment = .left
-        inputTextView.backgroundColor = UIColor.lightGray
-        return inputTextView
+        inputTextField.inputAccessoryView = self.inputTextViewAccessoryView
+        inputTextField.accessibilityLabel = self.inputTextViewAccessibilityLabel
+        inputTextField.textAlignment = .left
+        // inputTextField.layer.borderColor = UIColor.black.cgColor // self.removableColorScheme.textColor.cgColor
+        inputTextField.layer.backgroundColor = UIColor.lightGray.cgColor
+        return inputTextField
     }()
     
     // The label shown when the TagLisView is in collapsed state
@@ -447,7 +481,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     private lazy var collapsedLabel: UILabel = {
         let collapsedLabel = UILabel()
         collapsedLabel.font = self.textFont
-        collapsedLabel.text = self.datasource?.tagListViewCollapsedText?(self) ?? "This is a collapsed label"
+        collapsedLabel.text = self.datasource?.tagListViewCollapsedText(self) ?? "Not setup"
         collapsedLabel.textColor = .green //Constants.defaultTextInputColor
         collapsedLabel.backgroundColor = .white
         collapsedLabel.minimumScaleFactor = 5.0 / collapsedLabel.font.pointSize
@@ -458,47 +492,23 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     private lazy var tagView: TagView = {
         let tagView = TagView(title: "")
         tagView.delegate = self
-        tagView.textColor = self.textColor
-        tagView.selectedTextColor = self.selectedTextColor
-        tagView.highlightedTextColor = self.highlightedTextColor
-        tagView.tagBackgroundColor = self.tagBackgroundColor
-        tagView.tagHighlightedBackgroundColor = self.tagHighlightedBackgroundColor
-        tagView.tagSelectedBackgroundColor = self.tagSelectedBackgroundColor
+        tagView.normalColorScheme = self.normalColorScheme
+        tagView.selectedColorScheme = self.selectedColorScheme
+        tagView.removableColorScheme = self.removableColorScheme
         tagView.cornerRadius = self.cornerRadius
         tagView.borderWidth = self.borderWidth
-        tagView.borderColor = self.borderColor
-        tagView.selectedBorderColor = self.selectedBorderColor
-        tagView.highlightedBorderColor = self.highlightedBorderColor
         tagView.horizontalPadding = self.horizontalPadding
         tagView.verticalPadding = self.verticalPadding
         tagView.textFont = self.textFont
-        tagView.isSelected = false
-        tagView.isHighlighted = false
         tagView.removeButtonIsEnabled = false
-        // tagView.addTarget(self, action: #selector(tagPressed(_:)), for: .touchUpInside)
-        // tagView.removeButton.addTarget(self, action: #selector(removeButtonPressed(_:)), for: .touchUpInside)
-        
-        /*
-         These seems to interfere with the longPress for reordering.
-         Why have the longPress executed by the tagView?
-         It is supposed to be a function that works on all tagViews, i.e.
-         We could add a longPress gesture if isEditable = false,
-         but that evades the logic of isEditable.
-         However it does not break things.
-         Maybe I should make isEditable optional. If nil it is the past implementation. If true or false the future implementation.
-         if !allowReordering {
-         // On long press, deselect all tags except this one
-         tagView.onLongPress = { [unowned self] this in
-         for tag in self.tagViews {
-         tag.isSelected = (tag == this)
-         }
-         }
-         }
-         */
-        
+        tagView.shadowColor = self.shadowColor
+        tagView.shadowOpacity = self.shadowOpacity
+        tagView.shadowRadius = self.shadowRadius
+        tagView.shadowOffset = self.shadowOffset
+
         return tagView
     }()
-
+    
     private struct Clear {
         static let ImageSize: CGFloat = 14.0
         static let ViewSize: CGFloat = 22.0
@@ -513,73 +523,83 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         var clearImageView = UIImageView()
         if Clear.ViewSize > Clear.ImageSize {
             clearImageView = UIImageView.init(frame: CGRect.init(x: (Clear.ViewSize - Clear.ImageSize) / 2.0,
-                                                                     y: (Clear.ViewSize - Clear.ImageSize) / 2.0,
-                                                                     width: Clear.ImageSize,
-                                                                     height: Clear.ImageSize))
+                                                                 y: (Clear.ViewSize - Clear.ImageSize) / 2.0,
+                                                                 width: Clear.ImageSize,
+                                                                 height: Clear.ImageSize))
         } else {
             assert(true, "ImageView can not be larger than Image")
         }
-        clearImageView.tintColor = self.tagBackgroundColor
         clearImageView.contentMode = .scaleAspectFit
         clearImageView.image = image
-
+        clearImageView.tintColor = self.removableColorScheme.borderColor
+        
         // put the image in another view in order to have a margin around the image
         let clearView = UIView(frame: CGRect.init(x: 0, y: 0, width: Clear.ViewSize, height: Clear.ViewSize))
-
+        
         clearView.addSubview(clearImageView)
+        
         
         return clearView
     }()
     
+    private func setClearAllImageColor() {
+        clearView.subviews.forEach { $0.tintColor = self.removableColorScheme.borderColor }
+    }
+    
     fileprivate func unhighlightAllTags() {
         for tag in tagViews {
-            tag.isHighlighted = false
+            tag.state = .normal
         }
         setCursorVisibility()
     }
-
+    
     // MARK: - Private
     
     /*private lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView(
-            frame: CGRect(
-                x: 0.0,
-                y: 0.0,
-                width: self.frame.width,
-                height: self.frame.height
-            )
-        )
-        scrollView.scrollsToTop = false
-        scrollView.contentSize = CGSize(
-            width: self.frame.width - self.horizontalPadding * 2,
-            height: self.frame.height - self.verticalPadding * 2
-        )
-        scrollView.contentInset = UIEdgeInsets(
-            top: self.verticalPadding,
-            left: self.horizontalPadding,
-            bottom: self.verticalPadding,
-            right: self.horizontalPadding
-        )
-        scrollView.autoresizingMask = [
-            UIViewAutoresizing.flexibleHeight,
-            UIViewAutoresizing.flexibleWidth
-        ]
-        return scrollView
-    }()
- */
+     let scrollView = UIScrollView(
+     frame: CGRect(
+     x: 0.0,
+     y: 0.0,
+     width: self.frame.width,
+     height: self.frame.height
+     )
+     )
+     scrollView.scrollsToTop = false
+     scrollView.contentSize = CGSize(
+     width: self.frame.width - self.horizontalPadding * 2,
+     height: self.frame.height - self.verticalPadding * 2
+     )
+     scrollView.contentInset = UIEdgeInsets(
+     top: self.verticalPadding,
+     left: self.horizontalPadding,
+     bottom: self.verticalPadding,
+     right: self.horizontalPadding
+     )
+     scrollView.autoresizingMask = [
+     UIViewAutoresizing.flexibleHeight,
+     UIViewAutoresizing.flexibleWidth
+     ]
+     return scrollView
+     }()
+     */
     
     
     private var tagViews: [TagView] = []
     
-    /*
-    // MARK: - Interface Builder
-    
-    open override func prepareForInterfaceBuilder() {
-        
-        addTag("Welcome")
-        addTag("to")
-        selectTag(at: tagViews.index(of: addTag("TagListView"))!)
+    open func tagView(_ tagView: TagView, at index: Int) {
+        if index > 0 && index < tagViews.count - 1 {
+            tagViews[index] = tagView
+        }
     }
+    /*
+     // MARK: - Interface Builder
+     
+     open override func prepareForInterfaceBuilder() {
+     
+     addTag("Welcome")
+     addTag("to")
+     selectTag(at: tagViews.index(of: addTag("TagListView"))!)
+     }
      */
     
     // MARK: - Layout functions
@@ -592,16 +612,17 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
             invalidateIntrinsicContentSize()
         }
     }
-
+    
     open override func layoutSubviews() {
         super.layoutSubviews()
-
+        /*
         // Check in which state TagListView is
         if isCollapsed {
             layoutCollapsedLabel()
         } else {
-            rearrangeViews(false)
+            rearrangeViews(true)
         }
+ */
     }
     
     // Reload's the TagListView's data and layout it's views.
@@ -612,23 +633,35 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         
         // Setup the tagView array and load the data here
         for index in 0..<datasource!.numberOfTagsIn(self) {
-            let tagView = TagView(title: datasource?.tagListView(self, titleForTagAt: index) != nil ? datasource!.tagListView(self, titleForTagAt: index) : "")
+            tagView = TagView(title: datasource?.tagListView(self, titleForTagAt: index) ?? "Default Title" )
             tagView.delegate = self
             tagView.tag = index
-            tagView.textColor = self.textColor
-            tagView.selectedTextColor = self.selectedTextColor
-            tagView.highlightedTextColor = self.highlightedTextColor
-            tagView.tagBackgroundColor = self.tagBackgroundColor
-            tagView.tagHighlightedBackgroundColor = self.tagHighlightedBackgroundColor
-            tagView.tagSelectedBackgroundColor = self.tagSelectedBackgroundColor
+            tagView.normalColorScheme = normalColorScheme
+            tagView.removableColorScheme = removableColorScheme
+            tagView.selectedColorScheme = selectedColorScheme
+
+            if allowsRemoval {
+                // note that the removeButton state is set in rearrange as it affects the layout.
+                if datasource?.tagListView(self, canEditTagAt: index) != nil && datasource!.tagListView(self, canEditTagAt: index)  {
+                    tagView.state = .removable
+                } else {
+                    tagView.state = .normal
+                }
+            } else {
+                tagView.state = .normal
+            }
+
             tagView.borderWidth = self.borderWidth
-            tagView.borderColor = self.borderColor
-            tagView.selectedBorderColor = self.selectedBorderColor
-            tagView.highlightedBorderColor = self.highlightedBorderColor
-            tagView.isSelected = false
-            tagView.isHighlighted = false
-            tagView.removeButtonIsEnabled = false
-            tagViews.append(tagView)
+            if pureDelegate?.tagListView(self, willDisplay: tagView, at: index) != nil {
+                if let adaptedTagView = pureDelegate!.tagListView(self, willDisplay: tagView, at: index) {
+                    tagViews.append(adaptedTagView)
+                } else {
+                    tagViews.append(tagView)
+                }
+            } else {
+                tagViews.append(tagView)
+            }
+            
         }
         // Layout all the new TagViews
         rearrangeViews(true)
@@ -643,17 +676,17 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     private func clearUncollapsedView() {
         // TODO: is this OK?
         tagViews.forEach { $0.removeFromSuperview() }
-        inputTextView.removeFromSuperview()
-        invisibleTextView.removeFromSuperview()
+        inputTextField.removeFromSuperview()
+        invisibleTextField.removeFromSuperview()
         rowViews.removeAll(keepingCapacity: true)
         clearView.removeFromSuperview()
     }
-
-    private func rearrangeViews(_ shouldAdjustFrame: Bool) {
+    
+    fileprivate func rearrangeViews(_ shouldAdjustFrame: Bool) {
         
         clearUncollapsedView()
         
-        let inputViewShouldBecomeFirstResponder = inputTextView.isFirstResponder
+        let inputViewShouldBecomeFirstResponder = inputTextField.isFirstResponder
         //scrollView.subviews.forEach { $0.removeFromSuperview() }
         //scrollView.isHidden = false
         
@@ -662,25 +695,29 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
             tapGestureRecognizer = nil
         }
         
-        var currentX: CGFloat = 0.0
-        var currentY: CGFloat = 0.0
-
+        // startpoint of layout taking in account the margins
+        var currentX: CGFloat = Constants.defaultHorizontalMargin
+        var currentY: CGFloat = Constants.defaultVerticalMargin
+        
         // Add the possibility to intercept a backspace for last tag removal
         if isEditable && allowsRemoval {
-            addSubview(invisibleTextView)
+            addSubview(invisibleTextField)
         }
-
+        
         // Add the prefix Label
         
         if prefixLabelText != nil {
             layoutPrefixLabel(origin: CGPoint.zero, currentX: &currentX)
         }
-        
+        // print("after Prefix",currentY)
+
         layoutTagViewsWith(currentX: &currentX, currentY: &currentY)
         
         if isEditable && allowsCreation {
             layoutInputTextViewWith(currentX: &currentX, currentY: &currentY, clearInput: shouldAdjustFrame)
         }
+        // print("after Input",currentY)
+        // print("tagViewHeight", tagViewHeight)
         if shouldAdjustFrame {
             adjustHeightFor(currentY: currentY)
         }
@@ -693,7 +730,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         if tapGestureRecognizer != nil {
             clearView.addGestureRecognizer(tapGestureRecognizer!)
         }
-
+        
         //scrollView.contentSize = CGSize(
         //    width: scrollView.contentSize.width,
         //    height: currentY + inputTextView.frame.height
@@ -704,10 +741,10 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         if inputViewShouldBecomeFirstResponder {
             inputTextViewBecomeFirstResponder()
         } else {
-            // focusInputTextView(currentX: &currentX, currentY: &currentY)
+            // focusInputTextFIeld(currentX: &currentX, currentY: &currentY)
         }
-
         invalidateIntrinsicContentSize()
+        // print("frame used", frame.height)
     }
     
     
@@ -769,72 +806,44 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     //public var inputText: String {
     //    return inputTextView.text ?? ""
     //}
-
+    
     private func layoutTagViewsWith(currentX: inout CGFloat, currentY: inout CGFloat) {
         
         var currentRow = 0
         // var currentRowView: UIView!
         var currentRowTagCount = 0
-        var currentRowWidth: CGFloat = 0
+         var currentRowWidth: CGFloat = 0
         // print("frame", frame.size)
         
         // are there any tags?
         guard tagViews.count > 0 else { return }
         
         // calculate the rowWidth available for tags
-        var rowWidth = frame.size.width
-        if isEditable && allowsRemoval {
-            
-        }
-        rowWidth -= clearView.frame.width
+        let rowWidth = clearButtonIsEnabled ? frame.size.width - clearView.frame.width : frame.size.width
         
         for tagView in tagViews {
             tagView.cornerRadius = self.cornerRadius
             tagView.horizontalPadding = self.horizontalPadding
             tagView.verticalPadding = self.verticalPadding
             tagView.textFont = self.textFont
-            
             if self.isEditable && allowsRemoval {
-                if datasource?.tagListView?(self, canEditTagAt: tagView.tag) != nil && datasource!.tagListView!(self, canEditTagAt: tagView.tag) {
+                if datasource?.tagListView(self, canEditTagAt: tagView.tag) != nil && datasource!.tagListView(self, canEditTagAt: tagView.tag) {
                     tagView.removeButtonIsEnabled = true
+                    tagView.state = .removable
                 } else {
                     tagView.removeButtonIsEnabled = false
+                    tagView.state = .normal
                 }
             } else {
                 tagView.removeButtonIsEnabled = false
+                tagView.state = .normal
             }
             tagView.frame.size = tagView.intrinsicContentSize
             tagViewHeight = tagView.frame.height
             
-            if currentRowTagCount == 0 || currentRowWidth + tagView.frame.width > rowWidth {
-                currentRow += 1
-                currentRowWidth = 0
-                currentRowTagCount = 0
-                // currentRowView = UIView()
-                // currentRowView.frame.origin.y = CGFloat(currentRow - 1) * (tagViewHeight + verticalMargin)
-                // currentRowView.backgroundColor = UIColor.lightGray
-                // rowViews.append(currentRowView)
-                // addSubview(currentRowView)
-            }
-            
-            currentRowTagCount += 1
-            currentRowWidth += tagView.frame.width + horizontalMargin
-            
-            /*switch alignment {
-            case .left:
-                currentRowView.frame.origin.x = 0
-            case .center:
-                currentRowView.frame.origin.x = (frame.width - (currentRowWidth - horizontalMargin)) / 2
-            case .right:
-                currentRowView.frame.origin.x = frame.width - (currentRowWidth - horizontalMargin)
-            }
-            currentRowView.frame.size.width = currentRowWidth
-            currentRowView.frame.size.height = max(tagViewHeight, currentRowView.frame.height)
-            */
-            tagView.backgroundColor = backgroundColor
-            
-            if currentX + tagView.frame.width <= rowWidth {
-                // tagView fits in current line
+            // Is this the first tag of the row?
+            if currentRowTagCount == 0 {
+                // just add it irrespective of its size
                 tagView.frame = CGRect(
                     x: currentX,
                     y: currentY,
@@ -842,106 +851,150 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
                     height: tagView.frame.height
                 )
             } else {
-                // new line with TagViews
-                currentY += tagView.frame.height + Constants.defaultVerticalPadding
-                currentX = 0
-                var tagWidth = tagView.frame.width
-                if (tagWidth > frame.size.width) { // token is wider than max width
-                    tagWidth = frame.size.width
+                // Does it fit on the row?
+                if currentX + tagView.frame.width <= rowWidth {
+                    // Add to existing row
+                    
+                    // currentRowView = UIView()
+                    // currentRowView.frame.origin.y = CGFloat(currentRow - 1) * (tagViewHeight + verticalMargin)
+                    // currentRowView.backgroundColor = UIColor.lightGray
+                    // rowViews.append(currentRowView)
+                    // addSubview(currentRowView)
+                        // tagView fits in current line
+                    tagView.frame = CGRect(
+                        x: currentX,
+                        y: currentY,
+                        width: tagView.frame.width,
+                        height: tagView.frame.height
+                    )
+                } else {
+                    // Create new row with TagViews
+                    currentRowTagCount = 0
+                    currentRow += 1
+                    currentY += tagView.frame.height + Constants.defaultVerticalPadding
+                    currentX = 0
+                    var tagWidth = tagView.frame.width
+                    if (tagWidth > frame.size.width) { // token is wider than max width
+                            tagWidth = frame.size.width
+                    }
+                    tagView.frame = CGRect(
+                        x: currentX,
+                        y: currentY,
+                        width: tagWidth,
+                        height: tagView.frame.height
+                    )
                 }
-                tagView.frame = CGRect(
-                    x: currentX,
-                    y: currentY,
-                    width: tagWidth,
-                    height: tagView.frame.height
-                )
+                // print("currentXY", currentX, currentY)
+                //let tagBackgroundView = self.tagBackgroundView
+                //tagBackgroundView.frame.origin = CGPoint(x: currentX, y: currentY)
+                //tagBackgroundView.frame.size = tagView.bounds.size
+                //addSubview(tagBackgroundView)
+                addSubview(tagView)
+                // print("currentRowView", currentRowView.frame.origin)
+                // print("TagView", tagView.title, tagView.frame.origin, tagView.frame.size)
+                // print("backgroundTagView", tagBackgroundView.frame.origin)
+                //currentRowView.addSubview(tagView)
+                // currentRowView.addSubview(tagBackgroundView)
+                currentX += tagView.frame.width + horizontalPadding
+                // print("NEWcurrentXY", currentX, currentY)
+                
+                //scrollView.addSubview(tagView)
             }
-            // print("currentXY", currentX, currentY)
-            tagView.shadowColor = shadowColor
-            tagView.shadowOpacity = shadowOpacity
-            tagView.shadowRadius = shadowRadius
-            tagView.shadowOffset = shadowOffset
-            //let tagBackgroundView = self.tagBackgroundView
-            //tagBackgroundView.frame.origin = CGPoint(x: currentX, y: currentY)
-            //tagBackgroundView.frame.size = tagView.bounds.size
-            //addSubview(tagBackgroundView)
-            addSubview(tagView)
-            // print("currentRowView", currentRowView.frame.origin)
-            // print("TagView", tagView.tagViewLabel.text!, tagView.frame.origin)
-            // print("backgroundTagView", tagBackgroundView.frame.origin)
-            //currentRowView.addSubview(tagView)
-            // currentRowView.addSubview(tagBackgroundView)
-            currentX += tagView.frame.width + horizontalPadding
-            // print("NEWcurrentXY", currentX, currentY)
-
-            //scrollView.addSubview(tagView)
+            
+            currentRowTagCount += 1
+            currentRowWidth += tagView.frame.width + horizontalMargin
+            
+            /*switch alignment {
+             case .left:
+             currentRowView.frame.origin.x = 0
+             case .center:
+             currentRowView.frame.origin.x = (frame.width - (currentRowWidth - horizontalMargin)) / 2
+             case .right:
+             currentRowView.frame.origin.x = frame.width - (currentRowWidth - horizontalMargin)
+             }
+             currentRowView.frame.size.width = currentRowWidth
+             currentRowView.frame.size.height = max(tagViewHeight, currentRowView.frame.height)
+             */
+            // tagView.backgroundColor = backgroundColor
+            
         }
         rows = currentRow
     }
-
+    
     private func layoutInputTextViewWith(currentX: inout CGFloat, currentY: inout CGFloat, clearInput: Bool) {
         
-        var inputTextViewOrigin = CGPoint.init(x: currentX, y: currentY)
+        var inputTextViewOrigin = CGPoint()
         
-        //let inputHeight = inputTextView.intrinsicContentSize.height > Constants.defaultTagHeight
-        //    ? inputTextView.intrinsicContentSize.height
-        //    : Constants.defaultTagHeight
-        let inputHeight = tagViewHeight
+        //let inputHeight = inputTextField.intrinsicContentSize.height > Constants.defaultTagHeight
+//            ? inputTextField.intrinsicContentSize.height
+  //          : Constants.defaultTagHeight
+        
+        // let inputHeight = tagViewHeight
+        let clearButtonWidth = clearButtonIsEnabled ? CGFloat(Clear.ViewSize) : 0.0
+        
         // Is there enough space for a reasonable inputTextView
-        if currentX + Constants.defaultMinInputWidth >= frame.size.width {
+        if currentX + Constants.defaultMinInputWidth >= frame.width - clearButtonWidth {
             // start with a new row
-            inputTextViewOrigin.x = CGFloat(0.0)
+            inputTextViewOrigin.x = Constants.defaultHorizontalMargin
             inputTextViewOrigin.y = currentY + tagViewHeight + Constants.defaultVerticalPadding
+        } else {
+            inputTextViewOrigin.x = currentX
+            inputTextViewOrigin.y = currentY
         }
-        inputTextView.frame = CGRect(
+        
+        inputTextField.frame = CGRect(
             x: inputTextViewOrigin.x,
             y: inputTextViewOrigin.y,
-            width: frame.width - currentX,
-            height: inputHeight
+            width: frame.width - inputTextViewOrigin.x - clearButtonWidth,
+            height: tagViewHeight //  + Constants.defaultVerticalPadding
         )
-        currentX += inputTextView.frame.width
-        currentY += inputTextView.frame.height  
-        // print("inputHeight",inputHeight)
+        // print("frame origin", inputTextField.frame.origin, inputTextField.frame.size)
+
+        currentX += inputTextField.frame.width
+        currentY += inputTextViewOrigin.y
+        // print("inputHeight", inputHeight)
         /*
-        var exclusionPaths: [UIBezierPath] = []
+         var exclusionPaths: [UIBezierPath] = []
+         
+         if hasPrefixLabel && inputTextView.frame.origin.y == prefixLabel.frame.origin.y {
+         exclusionPaths.append(UIBezierPath(rect: prefixLabel.frame))
+         }
+         
+         for tagView in tagViews {
+         if inputTextView.frame.origin.y == tagView.frame.origin.y {
+         
+         var frame = tagView.frame
+         frame.origin.y = 0.0
+         
+         exclusionPaths.append(UIBezierPath(rect: frame))
+         }
+         }
+         inputTextView.textContainer.exclusionPaths = exclusionPaths
+         */
+        // inputTextField.backgroundColor = .white
+        // inputTextField.layer.borderColor = UIColor.green.cgColor
         
-        if hasPrefixLabel && inputTextView.frame.origin.y == prefixLabel.frame.origin.y {
-            exclusionPaths.append(UIBezierPath(rect: prefixLabel.frame))
-        }
-        
-        for tagView in tagViews {
-            if inputTextView.frame.origin.y == tagView.frame.origin.y {
-                
-                var frame = tagView.frame
-                frame.origin.y = 0.0
-                
-                exclusionPaths.append(UIBezierPath(rect: frame))
-            }
-        }
-        inputTextView.textContainer.exclusionPaths = exclusionPaths
- */
-        inputTextView.backgroundColor = .white
         if clearInput {
-            inputTextView.text = ""
+            inputTextField.text = ""
         }
         // scrollView.addSubview(inputTextView)
         // scrollView.sendSubview(toBack: inputTextView)
         // print("inputTextView origin", frame.origin.x, frame.origin.y)
-        addSubview(inputTextView)
+        addSubview(inputTextField)
         // sendSubview(toBack: inputTextView)
     }
-
+    
     /*private func focusInputTextView(currentX: CGFloat, currentY: CGFloat) {
-        let contentOffset = scrollView.contentOffset
-        let targetY = inputTextView.frame.origin.y + Constants.defaultTagHeight - maxHeight
-        if targetY > contentOffset.y {
-            scrollView.setContentOffset(
-                CGPoint(x: currentX, y: targetY),
-                animated: false
-            )
-        }
-    }
-    */
+     let contentOffset = scrollView.contentOffset
+     let targetY = inputTextView.frame.origin.y + Constants.defaultTagHeight - maxHeight
+     if targetY > contentOffset.y {
+     scrollView.setContentOffset(
+     CGPoint(x: currentX, y: targetY),
+     animated: false
+     )
+     }
+     }
+     */
     
     private func layoutClearView() {
         
@@ -950,7 +1003,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         // The clearView appears on the trailing edge
         // And vertically centered in the TagListView
         // Note that if TagListView is in another view, you might not see it.
-
+        
         clearView.frame.origin.x = frame.size.width - clearView.frame.size.width
         clearView.frame.origin.y = (frame.size.height - clearView.frame.size.height) / 2.0
         
@@ -958,40 +1011,57 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     }
     
     private func adjustHeightFor(currentY: CGFloat) {
-        let oldHeight = frame.size.height
-        var newFrame = frame
         
-        if currentY + Constants.defaultTagHeight > frame.height {
-            if currentY + Constants.defaultTagHeight <= maxHeight {
+        // The height of the TagListView frame should be adjusted
+        let oldHeight = frame.height
+        // print("old", oldHeight)
+        
+        var newFrame = frame
+        newFrame.size.height = currentY + tagViewHeight + Constants.defaultVerticalMargin
+
+        /*
+        // has the frame height increased?
+        if currentY + tagViewHeight + Constants.defaultVerticalMargin > oldHeight {
+            // still within height limit?
+            if currentY + tagViewHeight + Constants.defaultVerticalMargin <= maxHeight {
+                // YES - calculate new height
                 newFrame.size.height = currentY
-                    + Constants.defaultTagHeight
-                    + Constants.defaultVerticalMargin * 2
+                    + tagViewHeight
+                    + Constants.defaultVerticalMargin
             } else {
-                newFrame.size.height = maxHeight
-            }
-        } else {
-            if currentY + Constants.defaultTagHeight > originalHeight {
-                newFrame.size.height = currentY
-                    + Constants.defaultTagHeight
-                    + Constants.defaultVerticalMargin * 2
-            } else {
+                // No use maxHeight
                 newFrame.size.height = maxHeight
             }
         }
+        else {
+            newFrame.size.height = currentY + tagViewHeight + Constants.defaultVerticalMargin
+            /*
+            // has a first increase occured?
+            if currentY + tagViewHeight > originalHeight {
+                newFrame.size.height = currentY
+                    + tagViewHeight
+                    + Constants.defaultVerticalMargin * 2
+            } else {
+                newFrame.size.height = maxHeight
+            }
+             */
+        }
+ */
+ 
         if oldHeight != newFrame.height {
             frame = newFrame
-            // delegate?.tagListView(self, didChangeContent: newFrame.height)
+            // print("new",frame.height)
+            delegate?.tagListView(self, didChange: frame.height)
         }
     }
-
-    // MARK: - Manage tags
     
+    // MARK: - Manage tags
     override open var intrinsicContentSize: CGSize {
-        var height = CGFloat(rows) * (tagViewHeight + verticalMargin)
-        if rows > 0 {
-            height -= verticalMargin
-        }
-        return CGSize(width: frame.width, height: height)
+        //var height = CGFloat(rows) * (tagViewHeight + verticalMargin)
+        //if rows > 0 {
+        //    height -= verticalMargin
+        //}
+        return CGSize(width: frame.width, height: frame.height)
     }
     
     // MARK: - TagView delegates
@@ -1003,64 +1073,64 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     public func didTapRemoveButton(_ tagView: TagView) {
         removeTag(at: tagView.tag)
     }
-
+    
     /*
-    private func createNewTagView(_ title: String) -> TagView {
-        let tagView = self.tagView
-        tagView.title = title
-        return addTagView(tagView)
-    }
-    
-
-    
-    @discardableResult
-    private func addTag(_ title: String) -> TagView {
-        let tagView = self.tagView
-        tagView.title = title
-        return addTagView(tagView)
-    }
-    
-    @discardableResult
-    private func addTags(_ titles: [String]) -> [TagView] {
-        var tagViews: [TagView] = []
-        for title in titles {
-            tagViews.append(createNewTagView(title))
-        }
-        return addTagViews(tagViews)
-    }
-    
-    @discardableResult
-    private func addTagViews(_ tagViews: [TagView]) -> [TagView] {
-        for tagView in tagViews {
-            self.tagViews.append(tagView)
-            tagBackgroundViews.append(UIView(frame: tagView.bounds))
-        }
-        rearrangeViews(true)
-        return tagViews
-    }
-    
-    @discardableResult
-    private func insertTag(_ title: String, at index: Int) -> TagView {
-        return insertTagView(createNewTagView(title), at: index)
-    }
-    
-    @discardableResult
-    private func addTagView(_ tagView: TagView) -> TagView {
-        tagViews.append(tagView)
-        tagBackgroundViews.append(UIView(frame: tagView.bounds))
-        rearrangeViews(true)
-        
-        return tagView
-    }
-    
-    @discardableResult
-    private func insertTagView(_ tagView: TagView, at index: Int) -> TagView {
-        tagViews.insert(tagView, at: index)
-        tagBackgroundViews.insert(UIView(frame: tagView.bounds), at: index)
-        rearrangeViews(true)
-        
-        return tagView
-    }
+     private func createNewTagView(_ title: String) -> TagView {
+     let tagView = self.tagView
+     tagView.title = title
+     return addTagView(tagView)
+     }
+     
+     
+     
+     @discardableResult
+     private func addTag(_ title: String) -> TagView {
+     let tagView = self.tagView
+     tagView.title = title
+     return addTagView(tagView)
+     }
+     
+     @discardableResult
+     private func addTags(_ titles: [String]) -> [TagView] {
+     var tagViews: [TagView] = []
+     for title in titles {
+     tagViews.append(createNewTagView(title))
+     }
+     return addTagViews(tagViews)
+     }
+     
+     @discardableResult
+     private func addTagViews(_ tagViews: [TagView]) -> [TagView] {
+     for tagView in tagViews {
+     self.tagViews.append(tagView)
+     tagBackgroundViews.append(UIView(frame: tagView.bounds))
+     }
+     rearrangeViews(true)
+     return tagViews
+     }
+     
+     @discardableResult
+     private func insertTag(_ title: String, at index: Int) -> TagView {
+     return insertTagView(createNewTagView(title), at: index)
+     }
+     
+     @discardableResult
+     private func addTagView(_ tagView: TagView) -> TagView {
+     tagViews.append(tagView)
+     tagBackgroundViews.append(UIView(frame: tagView.bounds))
+     rearrangeViews(true)
+     
+     return tagView
+     }
+     
+     @discardableResult
+     private func insertTagView(_ tagView: TagView, at index: Int) -> TagView {
+     tagViews.insert(tagView, at: index)
+     tagBackgroundViews.insert(UIView(frame: tagView.bounds), at: index)
+     rearrangeViews(true)
+     
+     return tagView
+     }
      */
     
     // MARK: - State variables
@@ -1075,143 +1145,92 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         }
     }
     
-    open var isEditable = false {
+    private var isEditable: Bool {
+        get {
+            return allowsRemoval || allowsCreation || allowsReordering
+        }
+    }
+    
+    var allowsMultipleSelection = false
+    
+    var allowsCreation = false {
         didSet {
-            if isEditable {
-                // selection status is no longer relevant
-                deselectAllTags()
-                allowsRemoval = true
-                allowsReordering = true
-                allowsCreation = true
-            } else {
-                // highlight status is no longer relevant
-                tagViews.forEach { $0.isHighlighted = false }
-                allowsRemoval = false
-                allowsReordering = false
-                allowsCreation = false
+            if allowsCreation != oldValue {
+                rearrangeViews(true)
             }
         }
     }
-        
-    var allowsMultipleSelection = false
-    
-    var allowsCreation = false
     
     var allowsRemoval = false {
         didSet {
-            if allowsRemoval {
-                // note that the removeButton state is set in rearrange as it affects the layout.
-                if datasource?.tagListView?(self, canEditTagAt: tagView.tag) != nil && datasource!.tagListView!(self, canEditTagAt: tagView.tag) {
-                    tagView.isHighlighted = true
-                } else {
-                    tagView.isHighlighted = false
-                }
-            } else {
-                // reset all highlight states
-                tagViews.forEach { $0.isHighlighted = false }
+            if allowsRemoval != oldValue {
+                rearrangeViews(true)
             }
         }
     }
-
-    open var removeButtonIsEnabled : Bool = true
-
+    
+    open var removeButtonIsEnabled = true
+    
     // MARK: - Tag handling
     
     /*
-    private func removeTag(_ title: String) {
-        // loop the array in reversed order to remove items during loop
-        for index in stride(from: (tagViews.count - 1), through: 0, by: -1) {
-            
-            let tagView = tagViews[index]
-            if tagView.tagViewLabel?.text == title {
-                remove(tagView)
-            }
-        }
-    }
+     private func removeTag(_ title: String) {
+     // loop the array in reversed order to remove items during loop
+     for index in stride(from: (tagViews.count - 1), through: 0, by: -1) {
+     
+     let tagView = tagViews[index]
+     if tagView.tagViewLabel?.text == title {
+     remove(tagView)
+     }
+     }
+     }
      */
-
+    
     private func removeTag(at index: Int) {
-        if datasource?.tagListView!(self, canEditTagAt: index) != nil &&
-            datasource!.tagListView!(self, canEditTagAt: index) {
-            delegate?.tagListView!(self, willBeginEditingTagAt: index)
-            delegate?.tagListView?(self, didDeleteTagAt: index)
+        if datasource?.tagListView(self, canEditTagAt: index) != nil && datasource!.tagListView(self, canEditTagAt: index) {
+            delegate?.tagListView(self, willBeginEditingTagAt: index)
+            delegate?.tagListView(self, didDeleteTagAt: index)
             reloadData()
-            delegate?.tagListView!(self, didEndEditingTagAt: index)
+            delegate?.tagListView(self, didEndEditingTagAt: index)
         }
     }
-    
-/*
-    private func remove(_ tagView: TagView) {
-        if let index = tagViews.index(of: tagView) {
-            removeTag(at: index)
-        }
-    }
-    
-    
-    private func removeAllTags() {
-        let views = tagViews as [UIView] + tagBackgroundViews
-        for view in views {
-            view.removeFromSuperview()
-        }
-        tagViews = []
-        tagBackgroundViews = []
-        rearrangeViews(true)
-    }
-
-    private var tagsCount: Int {
-        get {
-            return tagViews.count
-        }
-    }
- */
     
     // MARK : Selection functions
     
     func deselectTag(at index: Int) {
-        tagViews[index].isSelected = false
+        tagViews[index].state = .normal
     }
     
     func selectTag(at index: Int) {
         if !allowsMultipleSelection {
             deselectAllTags()
         }
-        tagViews[index].isSelected = true
+        tagViews[index].state = .selected
     }
     
     open func deselectAllTags() {
-        tagViews.forEach { $0.isSelected = false }
+        tagViews.forEach { $0.state = .normal }
     }
     
     open var selectedTags: [Int] {
         get {
             var indeces: [Int] = []
             for (index, tagView) in tagViews.enumerated() {
-                if tagView.isSelected {
+                if tagView.state == .selected {
                     indeces.append(index)
                 }
             }
             return indeces
         }
     }
-
+    
     private func filterDeselectionAt(_ index: Int) {
         // deselection only works when not in editMode
         if !isEditable {
-            // has a deselection filter been defined
-            if delegate?.tagListView?(self, willDeselectTagAt: index) != nil {
-                // is it allowed to change the deselect state of this tag?
-                if index == delegate?.tagListView?(self, willDeselectTagAt: index) {
-                    // then select the tag
-                    deselectTag(at: index)
-                    delegate?.tagListView?(self, didDeselectTagAt: index)
-                } else {
-                    // no deselection allowed
-                }
-            } else {
-                // always allow
-                deselectTag(at: index)
-                delegate?.tagListView?(self, didDeselectTagAt: index)
-            }
+            delegate?.tagListView(self, willDeselectTagAt: index)
+            // then select the tag
+            deselectTag(at: index)
+            delegate?.tagListView(self, didDeselectTagAt: index)
         }
     }
     
@@ -1224,40 +1243,30 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     
     private func filterSelectionAt(_ index: Int) {
         if !isEditable {
-            // has a selection filter been defined?
-            if delegate?.tagListView?(self, willSelectTagAt: index) != nil {
-                // is it allowed to change the select state of this tag?
-                if index == delegate?.tagListView?(self, willSelectTagAt: index) {
-                    // then select the tag
-                    selectTag(at: index)
-                    delegate?.tagListView?(self, didSelectTagAt: index)
-                } else {
-                    // no selection allowed
-                }
-            } else {
-                selectTag(at: index)
-                delegate?.tagListView?(self, didSelectTagAt: index)
-            }
+            delegate?.tagListView(self, willSelectTagAt: index)
+            // then select the tag
+            selectTag(at: index)
+            delegate?.tagListView(self, didSelectTagAt: index)
         }
     }
-
+    
     // MARK: Index functions
     
     /*
-    var indexForSelectedTag: Int? {
-        get {
-            for (index, tagView) in tagViews.enumerated() {
-                if tagView.isSelected { return index }
-            }
-            return nil
-        }
-    }
- */
+     var indexForSelectedTag: Int? {
+     get {
+     for (index, tagView) in tagViews.enumerated() {
+     if tagView.isSelected { return index }
+     }
+     return nil
+     }
+     }
+     */
     
     private func indecesWithTag(_ title: String) -> [Int] {
         var indeces: [Int] = []
         for (index, tagView) in tagViews.enumerated() {
-            if tagView.label?.text == title {
+            if tagView.label.text == title {
                 indeces.append(index)
             }
         }
@@ -1275,13 +1284,13 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
             }
         } else {
             if let currentIndex = self.tagViews.index(of: sender) {
-                sender.isSelected ? filterDeselectionAt(currentIndex) : filterSelectionAt(currentIndex)
+                sender.state == .selected ? filterDeselectionAt(currentIndex) : filterSelectionAt(currentIndex)
             }
         }
         // delegate?.tagPressed?(sender.tagViewLabel?.text ?? "", tagView: sender, sender: self)
     }
     
-
+    
     private func indexForTagViewAt(_ point: CGPoint) -> Int? {
         for (index, tagView) in tagViews.enumerated() {
             if tagView.frame.contains(self.convert(point, to: tagView)) {
@@ -1294,13 +1303,13 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     // MARK: - Tap handling
     
     private var tapGestureRecognizer: UITapGestureRecognizer?
-
+    
     internal func uncollapseOnTap(_ sender: UITapGestureRecognizer) {
         isCollapsed = false
     }
     
     internal func clearOnTap(_ sender: UITapGestureRecognizer) {
-        datasource?.didClear?(self)
+        datasource?.didClear(self)
         // reload in case the user changed the data
         reloadData()
     }
@@ -1319,7 +1328,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
     private var longPressViewSnapshot : UIView? = nil
     
     private var longPressInitialIndex : Int? = nil
-
+    
     @objc private func longPressGestureRecognized(gestureRecognizer: UIGestureRecognizer) {
         
         func snapshotOfView(_ inputView: UIView) -> UIView {
@@ -1350,7 +1359,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
             case UIGestureRecognizerState.began:
                 self.longPressInitialIndex = index
                 if let sourceIndex = self.longPressInitialIndex {
-                    if let canMoveTag = datasource?.tagListView?(self, canMoveTagAt: sourceIndex) {
+                    if let canMoveTag = datasource?.tagListView(self, canMoveTagAt: sourceIndex) {
                         // check if the user gives permission to move this tag
                         if canMoveTag {
                             // make only a snapshot if the tag is allowed to move
@@ -1395,7 +1404,7 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
                         let validSourceIndex = self.longPressInitialIndex {
                         if validDestinationIndex != validSourceIndex {
                             // ask the user if the destinationIndex is allowed
-                            if let userDefinedDestinationIndex = delegate?.tagListView?(self, targetForMoveFromTagAt: validSourceIndex, toProposed: validDestinationIndex) {
+                            if let userDefinedDestinationIndex = delegate?.tagListView(self, targetForMoveFromTagAt: validSourceIndex, toProposed: validDestinationIndex) {
                                 // use the destinationIndex value proposed by the user
                                 moveTagAt(validSourceIndex, to: userDefinedDestinationIndex)
                                 self.longPressInitialIndex = userDefinedDestinationIndex
@@ -1445,25 +1454,25 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         func moveTagAt(_ fromIndex: Int, to toIndex: Int) {
             if fromIndex != toIndex {
                 // give the user the chance to move the data
-                datasource?.tagListView?(self, moveTagAt: fromIndex, to: toIndex)
+                datasource?.tagListView(self, moveTagAt: fromIndex, to: toIndex)
                 self.reloadData()
             }
         }
         
         startReOrderingTagAt(index)
-
+        
     }
     
     // TBD This should only work in editMode?
     // TBD Is there a mixup between highlighted and selected?
     // The user can delete tags with a backspace
-    func textViewDidEnterBackspace(_ textView: BackspaceTextView) {
+    func textFieldDidEnterBackspace(_ textField: BackspaceTextField) {
         var tagViewDeleted = false
         // Is the tag under datasource control?
         if let tagCount = datasource?.numberOfTagsIn(self), tagCount > 0 {
             for (index, tagView) in tagViews.enumerated() {
-                if tagView.isHighlighted {
-                    delegate?.tagListView?(self, didDeleteTagAt: index)
+                if tagView.state == .removable {
+                    delegate?.tagListView(self, didDeleteTagAt: index)
                     tagViewDeleted = true
                     self.reloadData()
                     break
@@ -1472,43 +1481,122 @@ open class TagListView: UIView, TagViewDelegate, BackspaceTextViewDelegate, UITe
         }
         if !tagViewDeleted {
             if let last = tagViews.last {
-                last.isHighlighted = true
+                last.state = .removable
             }
         }
         setCursorVisibility()
     }
     
-
+}
     // MARK: - UITextViewDelegates
     
-    public func textViewDidChange(_ textView: UITextView) {
-        // unhighlightAllTags()
-        // delegate?.tagListView?(self, didChange: textView.text ?? "")
+extension TagListView: UITextFieldDelegate {
     
-        if textView.contentSize.height > textView.frame.height {
-            rearrangeViews(true)
-        }
-    }
-    
-    public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // If the user enters a return, a new tag will be created
         
-        //unhighlightAllTags()
-        
-        guard text != "\n" else {
-            if !textView.text.isEmpty {
-                delegate?.tagListView?(self, didAddTagWith: textView.text)
-                textView.resignFirstResponder()
-                self.reloadData()
+        if string == "\n" {
+            if let newTag = textField.text {
+                if !newTag.isEmpty {
+                    delegate?.tagListView(self, didAddTagWith: newTag)
+                    self.reloadData()
+                }
             }
             return false
         }
         return true
     }
     
-    public func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView === inputTextView {
-            unhighlightAllTags()
-        }
+    /*
+    public func textFieldDidBeginEditing(_ textField: UITextField) {
+    }
+    */
+    
+    public func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.resignFirstResponder()
+    }
+
+}
+
+extension TagListView: TagListViewDataSource {
+    
+    /// Called when the user changes the text in the textField.
+    ///func tagListView(_ tagListView: TagListView, didChange text: String)
+    /// Called when the TagListView did begin editing.
+    ///func tagListViewDidBeginEditing(_ tagListView: TagListView)
+
+    /// Is it allowed to edit a Tag object at a given index?
+    public func tagListView(_ tagListView: TagListView, canEditTagAt index: Int) -> Bool {
+        return false
+    }
+    /// Is it allowed to move a Tag object at a given index?
+    public func tagListView(_ tagListView: TagListView, canMoveTagAt index: Int) -> Bool {
+        return false
+    }
+    /// The Tag object at the source index has been moved to a destination index.
+    public func tagListView(_ tagListView: TagListView, moveTagAt sourceIndex: Int, to destinationIndex: Int) {
     }
     
+    /// What is the title for the Tag object at a given index?
+    public func tagListView(_ tagListView: TagListView, titleForTagAt index: Int) -> String {
+        return "Default Title"
+    }
+    
+    /// What are the number of Tag objects in the TagListView?
+    public func numberOfTagsIn(_ tagListView: TagListView) -> Int {
+        return 0
+    }
+    
+    /// Called if the user wants to delete all tags
+    public func didClear(_ tagListView: TagListView) {
+    }
+    
+    /// Which text should be displayed when the TagListView is collapsed?
+    public func tagListViewCollapsedText(_ tagListView: TagListView) -> String {
+        return "Collapsed"
+    }
 }
+
+extension TagListView: TagListViewDelegate {
+
+    public func tagListView(_ tagListView: TagListView, didSelectTagAt index: Int) {
+    }
+    
+    public func tagListView(_ tagListView: TagListView, willSelectTagAt index: Int) {
+    }
+    
+    public func tagListView(_ tagListView: TagListView, didDeselectTagAt index: Int) {
+    }
+    
+    public func tagListView(_ tagListView: TagListView, willDeselectTagAt index: Int) {
+    }
+    
+    public func tagListView(_ tagListView: TagListView, willBeginEditingTagAt index: Int) {
+    }
+    
+    public func tagListView(_ tagListView: TagListView, didEndEditingTagAt index: Int) {
+    }
+    
+    public func tagListView(_ tagListView: TagListView, targetForMoveFromTagAt sourceIndex: Int,
+                     toProposed proposedDestinationIndex: Int) -> Int {
+        return proposedDestinationIndex
+    }
+    
+    public func tagListView(_ tagListView: TagListView, didAddTagWith title: String) {
+    }
+    
+    /// Called when the user returns for a given input.
+    ///func tagListView(_ tagListView: TagListView, didEnter text: String)
+    /// Called when the user tries to delete a tag at the given index.
+    public func tagListView(_ tagListView: TagListView, didDeleteTagAt index: Int) {
+    }
+    
+    /// Called when the user changes the text in the textField.
+    ///func tagListView(_ tagListView: TagListView, didChange text: String)
+    /// Called when the TagListView did begin editing.
+    ///func tagListViewDidBeginEditing(_ tagListView: TagListView)
+    /// Called when the TagListView's content height changes.
+    public func tagListView(_ tagListView: TagListView, didChange height: CGFloat) {
+    }
+}
+

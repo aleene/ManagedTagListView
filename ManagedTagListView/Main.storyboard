@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -282,19 +282,19 @@
                                 <rect key="frame" x="0.0" y="72" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="pwx-ec-0YO" id="QCk-Wn-Noq">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p72-Tq-uQj" customClass="TagListView" customModule="ManagedTagListView" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <rect key="frame" x="8" y="8" width="304" height="27.5"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </view>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="p72-Tq-uQj" secondAttribute="trailing" id="0Ia-CR-uWa"/>
-                                        <constraint firstItem="p72-Tq-uQj" firstAttribute="leading" secondItem="QCk-Wn-Noq" secondAttribute="leading" id="BYB-R9-V4Z"/>
-                                        <constraint firstAttribute="bottom" secondItem="p72-Tq-uQj" secondAttribute="bottom" id="Fvc-Yb-jg2"/>
-                                        <constraint firstItem="p72-Tq-uQj" firstAttribute="top" secondItem="QCk-Wn-Noq" secondAttribute="top" id="egg-13-xuk"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="p72-Tq-uQj" secondAttribute="trailing" id="0Ia-CR-uWa"/>
+                                        <constraint firstItem="p72-Tq-uQj" firstAttribute="leading" secondItem="QCk-Wn-Noq" secondAttribute="leadingMargin" id="BYB-R9-V4Z"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="p72-Tq-uQj" secondAttribute="bottom" id="Fvc-Yb-jg2"/>
+                                        <constraint firstItem="p72-Tq-uQj" firstAttribute="top" secondItem="QCk-Wn-Noq" secondAttribute="topMargin" id="egg-13-xuk"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>

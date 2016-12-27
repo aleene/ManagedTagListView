@@ -9,15 +9,17 @@
 /* Begin PBXBuildFile section */
 		516A7A361DFB21DF0010BF95 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A351DFB21DF0010BF95 /* AppDelegate.swift */; };
 		516A7A401DFB21DF0010BF95 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 516A7A3E1DFB21DF0010BF95 /* LaunchScreen.storyboard */; };
-		516A7A481DFC4F730010BF95 /* BackspaceTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A471DFC4F730010BF95 /* BackspaceTextView.swift */; };
-		516A7A4C1DFC4F840010BF95 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A491DFC4F840010BF95 /* TagView.swift */; };
-		516A7A4D1DFC4F840010BF95 /* TagView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 516A7A4A1DFC4F840010BF95 /* TagView.xib */; };
-		516A7A4E1DFC4F840010BF95 /* TagListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A4B1DFC4F840010BF95 /* TagListView.swift */; };
 		516A7A511DFC4FA00010BF95 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 516A7A4F1DFC4FA00010BF95 /* Main.storyboard */; };
 		516A7A521DFC4FA00010BF95 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 516A7A501DFC4FA00010BF95 /* Images.xcassets */; };
 		516A7A571DFC50D80010BF95 /* TagTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A561DFC50D80010BF95 /* TagTableViewController.swift */; };
 		516A7A591DFC50F30010BF95 /* TagsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A7A581DFC50F30010BF95 /* TagsTableViewCell.swift */; };
+		517818BB1E12825D00543E67 /* TagView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 517818BA1E12825D00543E67 /* TagView.xib */; };
+		517818BD1E12827C00543E67 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517818BC1E12827C00543E67 /* TagView.swift */; };
+		517818BF1E12828C00543E67 /* TagListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517818BE1E12828C00543E67 /* TagListView.swift */; };
+		517818C11E12829700543E67 /* TagViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517818C01E12829700543E67 /* TagViewState.swift */; };
+		517818C31E12830000543E67 /* BackspaceTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517818C21E12830000543E67 /* BackspaceTextField.swift */; };
 		51CF42C11DFC56CD00C9AD91 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CF42C01DFC56CC00C9AD91 /* ViewController.swift */; };
+		51CF42CD1E059BFF00C9AD91 /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CF42CC1E059BFE00C9AD91 /* ColorScheme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,16 +27,18 @@
 		516A7A351DFB21DF0010BF95 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		516A7A3F1DFB21DF0010BF95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		516A7A411DFB21DF0010BF95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		516A7A471DFC4F730010BF95 /* BackspaceTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackspaceTextView.swift; sourceTree = "<group>"; };
-		516A7A491DFC4F840010BF95 /* TagView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
-		516A7A4A1DFC4F840010BF95 /* TagView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagView.xib; sourceTree = "<group>"; };
-		516A7A4B1DFC4F840010BF95 /* TagListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagListView.swift; sourceTree = "<group>"; };
 		516A7A4F1DFC4FA00010BF95 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		516A7A501DFC4FA00010BF95 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		516A7A561DFC50D80010BF95 /* TagTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagTableViewController.swift; sourceTree = "<group>"; };
 		516A7A581DFC50F30010BF95 /* TagsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsTableViewCell.swift; sourceTree = "<group>"; };
+		517818BA1E12825D00543E67 /* TagView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagView.xib; sourceTree = "<group>"; };
+		517818BC1E12827C00543E67 /* TagView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
+		517818BE1E12828C00543E67 /* TagListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagListView.swift; sourceTree = "<group>"; };
+		517818C01E12829700543E67 /* TagViewState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagViewState.swift; sourceTree = "<group>"; };
+		517818C21E12830000543E67 /* BackspaceTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackspaceTextField.swift; sourceTree = "<group>"; };
 		51CF42C01DFC56CC00C9AD91 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		51CF42C21E02A5F600C9AD91 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		51CF42CC1E059BFE00C9AD91 /* ColorScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorScheme.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,10 +85,12 @@
 		516A7A531DFC4FD00010BF95 /* TagListView */ = {
 			isa = PBXGroup;
 			children = (
-				516A7A471DFC4F730010BF95 /* BackspaceTextView.swift */,
-				516A7A491DFC4F840010BF95 /* TagView.swift */,
-				516A7A4B1DFC4F840010BF95 /* TagListView.swift */,
-				516A7A4A1DFC4F840010BF95 /* TagView.xib */,
+				517818BA1E12825D00543E67 /* TagView.xib */,
+				517818BC1E12827C00543E67 /* TagView.swift */,
+				517818BE1E12828C00543E67 /* TagListView.swift */,
+				517818C21E12830000543E67 /* BackspaceTextField.swift */,
+				517818C01E12829700543E67 /* TagViewState.swift */,
+				51CF42CC1E059BFE00C9AD91 /* ColorScheme.swift */,
 			);
 			name = TagListView;
 			sourceTree = "<group>";
@@ -127,7 +133,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0810;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Hovering Above";
 				TargetAttributes = {
 					516A7A311DFB21DE0010BF95 = {
@@ -163,7 +169,7 @@
 				516A7A401DFB21DF0010BF95 /* LaunchScreen.storyboard in Resources */,
 				516A7A511DFC4FA00010BF95 /* Main.storyboard in Resources */,
 				516A7A521DFC4FA00010BF95 /* Images.xcassets in Resources */,
-				516A7A4D1DFC4F840010BF95 /* TagView.xib in Resources */,
+				517818BB1E12825D00543E67 /* TagView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,13 +180,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				516A7A4E1DFC4F840010BF95 /* TagListView.swift in Sources */,
-				516A7A481DFC4F730010BF95 /* BackspaceTextView.swift in Sources */,
+				51CF42CD1E059BFF00C9AD91 /* ColorScheme.swift in Sources */,
 				516A7A591DFC50F30010BF95 /* TagsTableViewCell.swift in Sources */,
 				516A7A571DFC50D80010BF95 /* TagTableViewController.swift in Sources */,
 				516A7A361DFB21DF0010BF95 /* AppDelegate.swift in Sources */,
 				51CF42C11DFC56CD00C9AD91 /* ViewController.swift in Sources */,
-				516A7A4C1DFC4F840010BF95 /* TagView.swift in Sources */,
+				517818BD1E12827C00543E67 /* TagView.swift in Sources */,
+				517818BF1E12828C00543E67 /* TagListView.swift in Sources */,
+				517818C11E12829700543E67 /* TagViewState.swift in Sources */,
+				517818C31E12830000543E67 /* BackspaceTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,6 +224,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -266,6 +275,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

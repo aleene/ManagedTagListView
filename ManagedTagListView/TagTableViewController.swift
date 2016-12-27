@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TagTableViewController: UITableViewController, TagListViewDelegate, TagListViewDataSource {
+class TagTableViewController: UITableViewController {
 
 
     // MARK: - Table view data source
@@ -21,7 +21,7 @@ class TagTableViewController: UITableViewController, TagListViewDelegate, TagLis
         return 1
     }
     
-    private var tags = ["This", "is", "a", "set", "of", "tags", "in", "a", "tableViewCell", ".", "There", "are", "a", "lot", "of", "tags", "defined", "here", "in", "order", "to", "show", "the", "dynamic", "cell", "height", "LAST ONE"]
+    fileprivate var tags = ["This", "is", "a", "set", "of", "tags", "in", "a", "tableViewCell", ".", "There", "are", "a", "lot", "of", "tags", "defined", "here", "in", "order", "to", "show", "the", "dynamic", "cell", "height", "LAST ONE"]
     
     fileprivate struct Storyboard {
         static let TagListViewCellIdentifier = "TagListView Cell"
@@ -37,7 +37,7 @@ class TagTableViewController: UITableViewController, TagListViewDelegate, TagLis
 
     // MARK: editMode functions and outlet/actions
     
-    private var editMode = false {
+    fileprivate var editMode = false {
         didSet {
             if editMode != oldValue {
                 setEditModeBarButtonItemTitle()
@@ -84,8 +84,12 @@ class TagTableViewController: UITableViewController, TagListViewDelegate, TagLis
         tableView.layoutIfNeeded()
         // tableView.reloadData()
     }
+}
+
+// MARK: - TagListView Delegates Functions
+
+extension TagTableViewController: TagListViewDelegate {
     
-    // MARK: - TagListView Delegates Functions
     
     func tagListView(_ tagListView: TagListView, didDeleteTagAt index: Int) {
         print("The tag with index", index, "has been selected")
@@ -96,23 +100,19 @@ class TagTableViewController: UITableViewController, TagListViewDelegate, TagLis
         }
     }
     
-    func tagListView(_ tagListView: TagListView, willSelectTagAt index: Int) -> Int {
+    func tagListView(_ tagListView: TagListView, willSelectTagAt index: Int) {
         print("The tag with index ", index, "will be selected")
-        return index
-        // return a negative number is a tag at index may not be selected
     }
     
     func tagListView(_ tagListView: TagListView, didDeselectTagAt index: Int) {
         print("The tag with index ", index, "has been DEselected")
     }
     
-    func tagListView(_ tagListView: TagListView, willDeselectTagAt index: Int) -> Int {
+    func tagListView(_ tagListView: TagListView, willDeselectTagAt index: Int) {
         print("The tag with index ", index, "will be DEselected")
-        return index
-        // return a negative number if a tag at index may not be selected
     }
     
-    @objc(tagListView:canEditTagAt:) func tagListView(_ tagListView: TagListView, canEditTagAt index: Int) -> Bool {
+    func tagListView(_ tagListView: TagListView, canEditTagAt index: Int) -> Bool {
         print("The tag with ", index, "can be edited")
         if index == 3 {
             // tag with index 3 may not be edited (deleted)
@@ -130,19 +130,28 @@ class TagTableViewController: UITableViewController, TagListViewDelegate, TagLis
     func tagListView(_ tagListView: TagListView, didEndEditingTagAt index: Int) {
         print("The tag with ", index, "has been edited")
     }
+
     
-    // MARK: - TagListView dataSource functions
+    public func tagListView(_ tagListView: TagListView, didSelectTagAt index: Int) {
+    }
     
-    /// The color scheme for the Tag object at a given index.
-    func tagListView(_ tagListView: TagListView, colorSchemeForTagAt index: Int) -> UIColor {
-        return .white
+    public func tagListView(_ tagListView: TagListView, targetForMoveFromTagAt sourceIndex: Int,
+                            toProposed proposedDestinationIndex: Int) -> Int {
+        return proposedDestinationIndex
+    }
+    
+    public func tagListView(_ tagListView: TagListView, didAddTagWith title: String) {
+    }
+    
+    /// Called when the TagListView's content height changes.
+    public func tagListView(_ tagListView: TagListView, didChange height: CGFloat) {
     }
 
-    /// The text to display in the TagListView when the field is inactive.
-    func tagListViewCollapsedText(_ tagListView: TagListView) -> String {
-        return ""
-    }
-    
+}
+
+// MARK: - TagListView DataSource Functions
+
+extension TagTableViewController: TagListViewDataSource {
     
     func tagListView(_ tagListView: TagListView, titleForTagAt index: Int) -> String {
         return tags[index]
@@ -151,5 +160,22 @@ class TagTableViewController: UITableViewController, TagListViewDelegate, TagLis
     func numberOfTagsIn(_ tagListView: TagListView) -> Int {
         return tags.count
     }
+
+    /// Is it allowed to move a Tag object at a given index?
+    public func tagListView(_ tagListView: TagListView, canMoveTagAt index: Int) -> Bool {
+        return false
+    }
+    /// The Tag object at the source index has been moved to a destination index.
+    public func tagListView(_ tagListView: TagListView, moveTagAt sourceIndex: Int, to destinationIndex: Int) {
+    }
     
+    /// Called if the user wants to delete all tags
+    public func didClear(_ tagListView: TagListView) {
+    }
+    
+    /// Which text should be displayed when the TagListView is collapsed?
+    public func tagListViewCollapsedText(_ tagListView: TagListView) -> String {
+        return "Collapsed"
+    }
+
 }
