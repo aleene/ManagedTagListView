@@ -163,14 +163,6 @@ extension ViewController: TagListViewDelegate {
         }
         return false
     }
-    
-    func tagListView(_ tagListView: TagListView, willBeginEditingTagAt index: Int) {
-        
-    }
-    
-    func tagListView(_ tagListView: TagListView, didEndEditingTagAt index: Int) {
-        
-    }
 
     func tagListView(_ tagListView: TagListView, didDeleteTagAt index: Int) {
         if tagListView === self.tagListView {
@@ -182,7 +174,14 @@ extension ViewController: TagListViewDelegate {
         }
     }
 
+    /*
     
+    func tagListView(_ tagListView: TagListView, willBeginEditingTagAt index: Int) {
+    }
+    
+    func tagListView(_ tagListView: TagListView, didEndEditingTagAt index: Int) {
+    }
+
     public func tagListView(_ tagListView: TagListView, didSelectTagAt index: Int) {
     }
     
@@ -197,6 +196,7 @@ extension ViewController: TagListViewDelegate {
     /// Called when the TagListView's content height changes.
     public func tagListView(_ tagListView: TagListView, didChange height: CGFloat) {
     }
+ */
 
 }
 // MARK: - TagListView dataSource functions

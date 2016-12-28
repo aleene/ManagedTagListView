@@ -20,6 +20,8 @@
 		517818C31E12830000543E67 /* BackspaceTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517818C21E12830000543E67 /* BackspaceTextField.swift */; };
 		51CF42C11DFC56CD00C9AD91 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CF42C01DFC56CC00C9AD91 /* ViewController.swift */; };
 		51CF42CD1E059BFF00C9AD91 /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CF42CC1E059BFE00C9AD91 /* ColorScheme.swift */; };
+		51E92AF91E13C5510071B293 /* TagListViewDatasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E92AF81E13C5510071B293 /* TagListViewDatasource.swift */; };
+		51E92AFB1E13C6BA0071B293 /* TagListViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E92AFA1E13C6BA0071B293 /* TagListViewDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +41,8 @@
 		51CF42C01DFC56CC00C9AD91 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		51CF42C21E02A5F600C9AD91 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		51CF42CC1E059BFE00C9AD91 /* ColorScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorScheme.swift; sourceTree = "<group>"; };
+		51E92AF81E13C5510071B293 /* TagListViewDatasource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagListViewDatasource.swift; sourceTree = "<group>"; };
+		51E92AFA1E13C6BA0071B293 /* TagListViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagListViewDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +95,8 @@
 				517818C21E12830000543E67 /* BackspaceTextField.swift */,
 				517818C01E12829700543E67 /* TagViewState.swift */,
 				51CF42CC1E059BFE00C9AD91 /* ColorScheme.swift */,
+				51E92AF81E13C5510071B293 /* TagListViewDatasource.swift */,
+				51E92AFA1E13C6BA0071B293 /* TagListViewDelegate.swift */,
 			);
 			name = TagListView;
 			sourceTree = "<group>";
@@ -182,9 +188,11 @@
 			files = (
 				51CF42CD1E059BFF00C9AD91 /* ColorScheme.swift in Sources */,
 				516A7A591DFC50F30010BF95 /* TagsTableViewCell.swift in Sources */,
+				51E92AF91E13C5510071B293 /* TagListViewDatasource.swift in Sources */,
 				516A7A571DFC50D80010BF95 /* TagTableViewController.swift in Sources */,
 				516A7A361DFB21DF0010BF95 /* AppDelegate.swift in Sources */,
 				51CF42C11DFC56CD00C9AD91 /* ViewController.swift in Sources */,
+				51E92AFB1E13C6BA0071B293 /* TagListViewDelegate.swift in Sources */,
 				517818BD1E12827C00543E67 /* TagView.swift in Sources */,
 				517818BF1E12828C00543E67 /* TagListView.swift in Sources */,
 				517818C11E12829700543E67 /* TagViewState.swift in Sources */,

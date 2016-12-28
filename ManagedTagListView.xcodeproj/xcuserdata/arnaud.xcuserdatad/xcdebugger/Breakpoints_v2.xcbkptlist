@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ManagedTagListView/TagListView.swift"
-            timestampString = "504548744.792902"
+            timestampString = "504616477.29642"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1327"
-            endingLineNumber = "1327"
+            startingLineNumber = "1246"
+            endingLineNumber = "1246"
             landmarkName = "TagListView"
             landmarkType = "3">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ManagedTagListView/TagListView.swift"
-            timestampString = "504028107.931393"
+            timestampString = "504615813.482979"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "678"
-            endingLineNumber = "678"
+            startingLineNumber = "616"
+            endingLineNumber = "616"
             landmarkName = "clearUncollapsedView()"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ManagedTagListView/TagListView.swift"
-            timestampString = "504028107.931393"
+            timestampString = "504615813.482979"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "658"
-            endingLineNumber = "658"
+            startingLineNumber = "596"
+            endingLineNumber = "596"
             landmarkName = "reloadData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ManagedTagListView/TagListView.swift"
-            timestampString = "504028107.931393"
+            timestampString = "504615813.482979"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "382"
-            endingLineNumber = "382"
+            startingLineNumber = "322"
+            endingLineNumber = "322"
             landmarkName = "initSetup()"
             landmarkType = "7">
          </BreakpointContent>
@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ManagedTagListView/TagListView.swift"
-            timestampString = "504548744.792902"
+            timestampString = "504616477.29642"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "989"
-            endingLineNumber = "989"
+            startingLineNumber = "902"
+            endingLineNumber = "902"
             landmarkName = "TagListView"
             landmarkType = "3">
          </BreakpointContent>

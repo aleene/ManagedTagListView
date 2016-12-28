@@ -131,7 +131,7 @@ extension TagTableViewController: TagListViewDelegate {
         print("The tag with ", index, "has been edited")
     }
 
-    
+    /*
     public func tagListView(_ tagListView: TagListView, didSelectTagAt index: Int) {
     }
     
@@ -146,7 +146,7 @@ extension TagTableViewController: TagListViewDelegate {
     /// Called when the TagListView's content height changes.
     public func tagListView(_ tagListView: TagListView, didChange height: CGFloat) {
     }
-
+*/
 }
 
 // MARK: - TagListView DataSource Functions
@@ -160,7 +160,8 @@ extension TagTableViewController: TagListViewDataSource {
     func numberOfTagsIn(_ tagListView: TagListView) -> Int {
         return tags.count
     }
-
+    
+    /*
     /// Is it allowed to move a Tag object at a given index?
     public func tagListView(_ tagListView: TagListView, canMoveTagAt index: Int) -> Bool {
         return false
@@ -177,5 +178,5 @@ extension TagTableViewController: TagListViewDataSource {
     public func tagListViewCollapsedText(_ tagListView: TagListView) -> String {
         return "Collapsed"
     }
-
+     */
 }

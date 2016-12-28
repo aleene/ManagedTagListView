@@ -72,13 +72,13 @@ func tagListView(_ tagListView: TagListView, didDeselectTagAt index: Int) -> Voi
 ```
 
 ### Edit-mode
-If a TagListView is set in edit-mode with `isEditable = true`, the user can remove, add and reorder tags. 
+If a TagListView is set in edit-mode, the user can remove, add and reorder tags. 
 It is possible to finetune what is allowed with: 
-- `allowsRemoval = true` (default), which allows/disallows removal of tags;
-- `clearButtonIsEnabled = true` (default), which adds a clear all Tags button;
-- `removeButtonIsEnabled = true` (default), which adds a remove tag accessory next to the tag's text. If the keyboard is enabled, tags can also be deleted by backspacing;
-- `allowsCreation = true` (default), which allows the user to add tags, by tapping on the tagViewList;
-- `allowsReordering = true` (default), which allows the user to reorder tags by drag&drop; 
+- `allowsRemoval = false` (default), which allows/disallows removal of tags;
+- `clearButtonIsEnabled = false` (default), which adds a clear all Tags button;
+- `removeButtonIsEnabled = false` (default), which adds a remove tag accessory next to the tag's text. If the keyboard is enabled, tags can also be deleted by backspacing;
+- `allowsCreation = false` (default), which allows the user to add tags, by tapping on the tagViewList;
+- `allowsReordering = false` (default), which allows the user to reorder tags by drag&drop; 
 
 If the user is allowed to remove a tag, its appearance can be adjusted with:
 ```swift
